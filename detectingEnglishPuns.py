@@ -2,15 +2,18 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import torch
 from torch.utils.data import TensorDataset
-from transformers import BertTokenizer
+from transformers import BertTokenizer, BertForSequenceClassification
 from sklearn.model_selection import train_test_split
 #import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
+from torch.optim import AdamW
 
 BATCH_SIZE = 16
 MAX_LENGTH = 128
 
-def create_dataloader_from_data(x_data, y_data, tokenizer, maxlen, batch_size):
+bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+
+def create_dataloader_from_data(x_data, y_data, tokenizer, maxlen, batch_size, shuffle=False):
     encodings = tokenizer(
         x_data['text'].tolist(),     
         truncation=True,          
@@ -24,9 +27,9 @@ def create_dataloader_from_data(x_data, y_data, tokenizer, maxlen, batch_size):
     labels = torch.tensor(y_data.values) 
     dataset = TensorDataset(input_ids, attention_mask, labels)
     
-    print(dataset[0])
+    #print(dataset[0])
 
-    dataloader = DataLoader(dataset, batch_size=batch_size)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
     return dataloader
 
 tree = ET.parse('./src/subtask1-homographic-test.xml')
@@ -73,7 +76,8 @@ training_dataloader = create_dataloader_from_data(x_train,
     y_train, 
     tokenizer, 
     MAX_LENGTH,
-    BATCH_SIZE
+    BATCH_SIZE,
+    shuffle=True
 )
 
 validation_dataloader = create_dataloader_from_data(x_val, 
@@ -89,3 +93,15 @@ testing_dataloader = create_dataloader_from_data(x_test,
     MAX_LENGTH,
     BATCH_SIZE
 )
+
+#batches len
+#print(len(training_dataloader)) 
+#print(len(validation_dataloader)) 
+#print(len(testing_dataloader)) 
+
+optimizer = AdamW(bert_model.parameters(),
+                  lr = 2e-5,
+                  eps = 1e-8
+                )
+
+loss_function = torch.nn.CrossEntropyLoss()
