@@ -1,0 +1,28 @@
+NUM_EPOCHS = 3
+BATCH_SIZE = 16
+MAX_LENGTH = 128
+TRAIN_SIZE 70%
+VALIDATION_SIZE 15%
+TEST_SIZE 15%
+
+Starting Epoch 1 of 3
+Average Training Loss: 0.3360
+Validation Accuracy: 0.9112
+
+Starting Epoch 2 of 3
+Average Training Loss: 0.1680
+Validation Accuracy: 0.9320
+
+Starting Epoch 3 of 3
+Average Training Loss: 0.0800
+Validation Accuracy: 0.9379
+
+              precision    recall  f1-score   support
+
+     Non-Pun       0.92      0.85      0.88        97
+         Pun       0.94      0.97      0.96       241
+
+    accuracy                           0.93       338
+   macro avg       0.93      0.91      0.92       338
+weighted avg       0.93      0.93      0.93       338
+
