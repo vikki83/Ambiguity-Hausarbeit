@@ -13,6 +13,7 @@ import os
 NUM_EPOCHS = 3
 BATCH_SIZE = 16
 MAX_LENGTH = 128
+LEARNING_RATE = 1e-5
 DATASET_PATH = "./src/subtask1-homographic-test.xml"
 OUTPUT_DIRECTORY = f"./pun_detection_model-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}/"
 DEFAULT_DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -134,7 +135,7 @@ def custom_testing():
 bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
 bert_model.to(DEFAULT_DEVICE)
-optimizer = AdamW(bert_model.parameters(), lr=2e-5, eps=1e-8)
+optimizer = AdamW(bert_model.parameters(), lr=LEARNING_RATE, eps=1e-8)
 
 # dataset preparation
 df = prepare_dataset(DATASET_PATH)
@@ -144,8 +145,12 @@ if df is None:
 x = df.drop('label', axis=1)
 y = df['label']
 
-x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
-x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
+#x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
+#x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
+#                                                  stratify=y_train_val)
+
+x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
                                                   stratify=y_train_val)
 
 # Class weights for imbalanced data
@@ -160,7 +165,8 @@ with open(report_path, "w") as file:
         f"BATCH_SIZE: {BATCH_SIZE}, "
         f"TRAINING_SIZE: {len(y_train)}, "
         f"VAL_SIZE: {len(y_val)}, "
-        f"TEST_SIZE: {len(y_test)}\n"
+        f"TEST_SIZE: {len(y_test)},"
+        f"LEARNING_RATE: {LEARNING_RATE}\n"
     )
     file.write("=" * 70 + "\n\n")
 
@@ -189,7 +195,6 @@ for epoch in range(NUM_EPOCHS):
     avg_training_loss = total_training_loss / len(training_dataloader)
     print(f"Average Training Loss for epoch {epoch + 1}: {avg_training_loss:.4f}")
     with open(report_path, "a") as file:
-        file.write("=" * 45 + "\n")
         file.write(f"Average Training Loss for epoch {epoch + 1}: {avg_training_loss:.4f}")
         file.write("\n" + "-" * 45 + "\n")
 
@@ -211,7 +216,6 @@ for epoch in range(NUM_EPOCHS):
     avg_val_accuracy = total_correct / total_samples
     print(f"Validation Accuracy: {avg_val_accuracy:.4f}\n")
     with open(report_path, "a") as file:
-        file.write("=" * 45 + "\n")
         file.write(f"Validation Accuracy: {avg_val_accuracy:.4f}\n")
         file.write("\n" + "-" * 45 + "\n")
 
