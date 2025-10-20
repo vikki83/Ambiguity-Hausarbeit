@@ -145,13 +145,15 @@ if df is None:
 x = df.drop('label', axis=1)
 y = df['label']
 
-#x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
-#x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
-#                                                  stratify=y_train_val)
-
-x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
-x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
+# Training 70%, Validation 15%, Test 15%
+x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
+x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
                                                   stratify=y_train_val)
+
+# Training 60%, Validation 20%, Test 20%
+# x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+# x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
+#                                                   stratify=y_train_val)
 
 # Class weights for imbalanced data
 class_counts = df['label'].value_counts()
