@@ -1,20 +1,15 @@
 ======================================================================
-NUM_EPOCHS: 3, BATCH_SIZE: 16, TRAINING_SIZE: 1574, VAL_SIZE: 338, TEST_SIZE: 338,LEARNING_RATE: 1e-05
+NUM_EPOCHS: 2, BATCH_SIZE: 16, TRAINING_SIZE: 771, VAL_SIZE: 257, TEST_SIZE: 258,LEARNING_RATE: 1e-05
 ======================================================================
 
-Average Training Loss for epoch 1: 0.4197
+Average Training Loss for epoch 1: 0.6144
 ---------------------------------------------
-Validation Accuracy: 0.9260
+Validation Accuracy: 0.8638
 
 ---------------------------------------------
-Average Training Loss for epoch 2: 0.2026
+Average Training Loss for epoch 2: 0.3373
 ---------------------------------------------
-Validation Accuracy: 0.9379
-
----------------------------------------------
-Average Training Loss for epoch 3: 0.1082
----------------------------------------------
-Validation Accuracy: 0.9112
+Validation Accuracy: 0.9066
 
 ---------------------------------------------
 =============================================
@@ -22,51 +17,51 @@ Validation for the new model
 
               precision    recall  f1-score   support
 
-     Non-Pun       0.94      0.68      0.79        97
-         Pun       0.88      0.98      0.93       241
+     Non-Pun       0.89      0.91      0.90       129
+         Pun       0.90      0.88      0.89       129
 
-    accuracy                           0.90       338
-   macro avg       0.91      0.83      0.86       338
-weighted avg       0.90      0.90      0.89       338
+    accuracy                           0.90       258
+   macro avg       0.90      0.90      0.90       258
+weighted avg       0.90      0.90      0.90       258
 =============================================
 
 
 ===========================================================================
 Custom Testing Summary
-Puns: (50/50 correct)
-Non-Puns: (1/50 correct)
+Puns: (43/50 correct)
+Non-Puns: (5/50 correct)
 
 =============================================
 Performance of the model with new sentences
               precision    recall  f1-score   support
 
-     Non-Pun       1.00      0.02      0.04        50
-         Pun       0.51      1.00      0.67        50
+     Non-Pun       0.42      0.10      0.16        50
+         Pun       0.49      0.86      0.62        50
 
-    accuracy                           0.51       100
-   macro avg       0.75      0.51      0.36       100
-weighted avg       0.75      0.51      0.36       100
+    accuracy                           0.48       100
+   macro avg       0.45      0.48      0.39       100
+weighted avg       0.45      0.48      0.39       100
 =============================================
 
-Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Pun - Correct: Pun
+Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Non-Pun - Correct: Pun
 Sentence: Why did the scarecrow win an award? Because he was outstanding in his field. - Prediction: Pun - Correct: Pun
 Sentence: I used to be a baker, but I couldn't make enough dough. - Prediction: Pun - Correct: Pun
 Sentence: I don't trust stairs. They're always up to something. - Prediction: Pun - Correct: Pun
 Sentence: Did you hear about the restaurant on the moon? Great food, no atmosphere. - Prediction: Pun - Correct: Pun
-Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Pun - Correct: Pun
+Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Non-Pun - Correct: Pun
 Sentence: What's the best thing about Switzerland? I don't know, but the flag is a big plus. - Prediction: Pun - Correct: Pun
 Sentence: I stayed up all night to see where the sun went. Then it dawned on me. - Prediction: Pun - Correct: Pun
 Sentence: The lumberjack loved his new computer. He especially liked logging in. - Prediction: Pun - Correct: Pun
 Sentence: A ghost walked into a bar and ordered a spirit. - Prediction: Pun - Correct: Pun
 Sentence: I wondered why the frisbee was getting bigger. Then it hit me. - Prediction: Pun - Correct: Pun
-Sentence: What do you get from a pampered cow? Spoiled milk. - Prediction: Pun - Correct: Pun
+Sentence: What do you get from a pampered cow? Spoiled milk. - Prediction: Non-Pun - Correct: Pun
 Sentence: The invention of the shovel was groundbreaking. - Prediction: Pun - Correct: Pun
 Sentence: I'm trying to learn to handle my fear of elevators. I'm taking steps to avoid them. - Prediction: Pun - Correct: Pun
 Sentence: I'm reading a horror story in Braille. Something bad is about to happen, I can feel it. - Prediction: Pun - Correct: Pun
 Sentence: A bee's hair is always sticky because it uses a honeycomb. - Prediction: Pun - Correct: Pun
 Sentence: What do you call a pig that does karate? A pork chop. - Prediction: Pun - Correct: Pun
-Sentence: Why are fish so smart? Because they live in schools. - Prediction: Pun - Correct: Pun
-Sentence: My sea sickness comes in waves. - Prediction: Pun - Correct: Pun
+Sentence: Why are fish so smart? Because they live in schools. - Prediction: Non-Pun - Correct: Pun
+Sentence: My sea sickness comes in waves. - Prediction: Non-Pun - Correct: Pun
 Sentence: I'm glad I know sign language, it's pretty handy. - Prediction: Pun - Correct: Pun
 Sentence: I'm terrified of clocks. They're very alarming. - Prediction: Pun - Correct: Pun
 Sentence: I told my computer I needed a break, and it said, 'No problem, I'm already in bits.' - Prediction: Pun - Correct: Pun
@@ -74,7 +69,7 @@ Sentence: A midget psychic escaped from prison. He was a small medium at large. 
 Sentence: Why did the coffee file a police report? It got mugged. - Prediction: Pun - Correct: Pun
 Sentence: I asked the AI for a joke, and it responded so promptly. - Prediction: Pun - Correct: Pun
 Sentence: That must be a loud musician. He's got a lot of amps. - Prediction: Pun - Correct: Pun
-Sentence: The calendar maker's days are numbered. - Prediction: Pun - Correct: Pun
+Sentence: The calendar maker's days are numbered. - Prediction: Non-Pun - Correct: Pun
 Sentence: Why did the biologist break up with the physicist? They had no chemistry. - Prediction: Pun - Correct: Pun
 Sentence: I asked a sign painter for a good pun. He gave me a sign. - Prediction: Pun - Correct: Pun
 Sentence: The life of a lighthouse keeper is very isolated, but they're always in the spotlight. - Prediction: Pun - Correct: Pun
@@ -94,7 +89,7 @@ Sentence: The man who survived a fall from a 10-story building was not worried. 
 Sentence: Why was the math book sad? It had too many problems. - Prediction: Pun - Correct: Pun
 Sentence: The past, the present, and the future walked into a bar. It was tense. - Prediction: Pun - Correct: Pun
 Sentence: The geography teacher was fired for getting lost. He couldn't find his bearings. - Prediction: Pun - Correct: Pun
-Sentence: What's the difference between a zookeeper and a gambler? One has a stake in the lions, the other has lions at stake. - Prediction: Pun - Correct: Pun
+Sentence: What's the difference between a zookeeper and a gambler? One has a stake in the lions, the other has lions at stake. - Prediction: Non-Pun - Correct: Pun
 Sentence: Why are musicians so bad at fishing? They're always dropping the bass. - Prediction: Pun - Correct: Pun
 Sentence: I tried to sue the airline for losing my luggage. I lost my case. - Prediction: Pun - Correct: Pun
 Sentence: The tailor was fired from his job. It seems he just wasn't suited for the work. - Prediction: Pun - Correct: Pun
@@ -103,10 +98,10 @@ Sentence: My favorite color is blue, but I also like green. - Prediction: Pun - 
 Sentence: I need to buy groceries after work. - Prediction: Pun - Correct: Non-Pun
 Sentence: The library is closed on Sundays. - Prediction: Pun - Correct: Non-Pun
 Sentence: This new software update has several security patches. - Prediction: Pun - Correct: Non-Pun
-Sentence: The Earth revolves around the Sun in approximately 365 days. - Prediction: Pun - Correct: Non-Pun
+Sentence: The Earth revolves around the Sun in approximately 365 days. - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: I am planning to visit my family next month. - Prediction: Pun - Correct: Non-Pun
 Sentence: The dog barked at the mail carrier. - Prediction: Pun - Correct: Non-Pun
-Sentence: This book provides a detailed history of the Roman Empire. - Prediction: Pun - Correct: Non-Pun
+Sentence: This book provides a detailed history of the Roman Empire. - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: She is learning to play the piano. - Prediction: Pun - Correct: Non-Pun
 Sentence: The meeting was postponed due to a scheduling conflict. - Prediction: Pun - Correct: Non-Pun
 Sentence: Remember to charge your phone before you leave. - Prediction: Non-Pun - Correct: Non-Pun
@@ -122,7 +117,7 @@ Sentence: The sky is very clear tonight, so we can see the stars. - Prediction: 
 Sentence: My computer is running slowly; I should probably restart it. - Prediction: Pun - Correct: Non-Pun
 Sentence: The restaurant's special of the day is grilled salmon. - Prediction: Pun - Correct: Non-Pun
 Sentence: She forgot her umbrella and got wet in the rain. - Prediction: Pun - Correct: Non-Pun
-Sentence: The presentation will begin in ten minutes. - Prediction: Pun - Correct: Non-Pun
+Sentence: The presentation will begin in ten minutes. - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: Many people commute to the city for work. - Prediction: Pun - Correct: Non-Pun
 Sentence: The museum's new exhibit features modern art. - Prediction: Pun - Correct: Non-Pun
 Sentence: He is studying to become a mechanical engineer. - Prediction: Pun - Correct: Non-Pun
@@ -144,7 +139,7 @@ Sentence: The wind is blowing strongly from the west. - Prediction: Pun - Correc
 Sentence: She is training for a marathon. - Prediction: Pun - Correct: Non-Pun
 Sentence: The phone's battery is almost dead. - Prediction: Pun - Correct: Non-Pun
 Sentence: The baby is sleeping in his crib. - Prediction: Pun - Correct: Non-Pun
-Sentence: The monkeys are at home - Prediction: Pun - Correct: Non-Pun
+Sentence: The monkeys are at home - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: The government announced new environmental regulations. - Prediction: Pun - Correct: Non-Pun
 Sentence: He is taking a course on statistics and data analysis. - Prediction: Pun - Correct: Non-Pun
 Sentence: The cat is sitting on the windowsill. - Prediction: Pun - Correct: Non-Pun
