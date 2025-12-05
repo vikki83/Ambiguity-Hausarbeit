@@ -1,20 +1,17 @@
 ======================================================================
-NUM_EPOCHS: 3, BATCH_SIZE: 16, TRAINING_SIZE: 1574, VAL_SIZE: 338, TEST_SIZE: 338
+NUM_EPOCHS: 2, BATCH_SIZE: 16, TRAINING_SIZE: 1574, VAL_SIZE: 338, TEST_SIZE: 338,LEARNING_RATE: 1e-05
 ======================================================================
 
-Average Training Loss for epoch 1: 0.3512
-
+Average Training Loss for epoch 1: 0.4197
+---------------------------------------------
 Validation Accuracy: 0.9260
----------------------------------------------
-Average Training Loss for epoch 2: 0.1358
 
-Validation Accuracy: 0.9260
 ---------------------------------------------
-Average Training Loss for epoch 3: 0.0555
-
-Validation Accuracy: 0.9290
+Average Training Loss for epoch 2: 0.2026
 ---------------------------------------------
+Validation Accuracy: 0.9379
 
+---------------------------------------------
 =============================================
 Validation for the new model
 
@@ -28,34 +25,121 @@ Validation for the new model
 weighted avg       0.93      0.93      0.93       338
 =============================================
 
-Sentence: I'm reading a book on anti-gravity. It's impossible to put down. - Prediction: Pun - Correct: Pun
-Sentence: The wedding for the two antennas was terrible, but the reception was amazing. - Prediction: Pun - Correct: Pun
-Sentence: The past, the present, and the future walked into a bar. It was tense. - Prediction: Pun - Correct: Pun
-Sentence: The weather is very nice today. - Prediction: Pun - Correct: Non-Pun
-Sentence: Sven lost interest in reading. - Prediction: Pun - Correct: Non-Pun
-Sentence: I asked the AI for a joke, and it responded so promptly. - Prediction: Pun - Correct: Pun
-Sentence: Never tell a chemistry joke to a volatile substance; it might overreact. - Prediction: Pun - Correct: Pun
-Sentence: I need to remember to buy milk on my way home from work. - Prediction: Pun - Correct: Non-Pun
-Sentence: The mother is feeding a baby but it doesn't like the food. - Prediction: Pun - Correct: Non-Pun
-Sentence: My cat is a good hunter. It is currently hunting my socks. - Prediction: Pun - Correct: Non-Pun
-Sentence: Sue was scared of speaking in public so she took a public speaking class. - Prediction: Pun - Correct: Non-Pun
-Sentence: The butcher backed into his meat grinder and got a little behind in his work. - Prediction: Pun - Correct: Pun
-Sentence: Why was the obtuse angle so upset? Because it was never right. - Prediction: Pun - Correct: Pun
-Sentence: A horse walks into a bar. Several patrons are startled and leave, as a horse in a bar is an unexpected and potentially dangerous situation. - Prediction: Pun - Correct: Pun
-Sentence: If at first you don't succeed, skydiving is probably not for you. - Prediction: Pun - Correct: Non-Pun
-Sentence: I ate all the apples. - Prediction: Non-Pun - Correct: Non-Pun
-Sentence: The monkeys are at home. - Prediction: Pun - Correct: Non-Pun
-Sentence: Teachers do not like correcting homework. - Prediction: Pun - Correct: Non-Pun
-Sentence: I wanted to learn how to drive a stick shift, but I couldn't find the manual. - Prediction: Pun - Correct: Pun
-Sentence: I'm trying to organize a hide-and-seek tournament, but it's a disaster. Good players are hard to find. - Prediction: Pun - Correct: Pun
+
+===========================================================================
+Custom Testing Summary
+Puns: (48/50 correct)
+Non-Puns: (1/50 correct)
+
 =============================================
 Performance of the model with new sentences
               precision    recall  f1-score   support
 
-     Non-Pun       1.00      0.10      0.18        10
-         Pun       0.53      1.00      0.69        10
+     Non-Pun       0.33      0.02      0.04        50
+         Pun       0.49      0.96      0.65        50
 
-    accuracy                           0.55        20
-   macro avg       0.76      0.55      0.44        20
-weighted avg       0.76      0.55      0.44        20
+    accuracy                           0.49       100
+   macro avg       0.41      0.49      0.35       100
+weighted avg       0.41      0.49      0.35       100
 =============================================
+
+Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why did the scarecrow win an award? Because he was outstanding in his field. - Prediction: Pun - Correct: Pun
+Sentence: I used to be a baker, but I couldn't make enough dough. - Prediction: Pun - Correct: Pun
+Sentence: I don't trust stairs. They're always up to something. - Prediction: Pun - Correct: Pun
+Sentence: Did you hear about the restaurant on the moon? Great food, no atmosphere. - Prediction: Pun - Correct: Pun
+Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Pun - Correct: Pun
+Sentence: What's the best thing about Switzerland? I don't know, but the flag is a big plus. - Prediction: Pun - Correct: Pun
+Sentence: I stayed up all night to see where the sun went. Then it dawned on me. - Prediction: Pun - Correct: Pun
+Sentence: The lumberjack loved his new computer. He especially liked logging in. - Prediction: Pun - Correct: Pun
+Sentence: A ghost walked into a bar and ordered a spirit. - Prediction: Pun - Correct: Pun
+Sentence: I wondered why the frisbee was getting bigger. Then it hit me. - Prediction: Pun - Correct: Pun
+Sentence: What do you get from a pampered cow? Spoiled milk. - Prediction: Non-Pun - Correct: Pun
+Sentence: The invention of the shovel was groundbreaking. - Prediction: Pun - Correct: Pun
+Sentence: I'm trying to learn to handle my fear of elevators. I'm taking steps to avoid them. - Prediction: Pun - Correct: Pun
+Sentence: I'm reading a horror story in Braille. Something bad is about to happen, I can feel it. - Prediction: Pun - Correct: Pun
+Sentence: A bee's hair is always sticky because it uses a honeycomb. - Prediction: Pun - Correct: Pun
+Sentence: What do you call a pig that does karate? A pork chop. - Prediction: Pun - Correct: Pun
+Sentence: Why are fish so smart? Because they live in schools. - Prediction: Pun - Correct: Pun
+Sentence: My sea sickness comes in waves. - Prediction: Pun - Correct: Pun
+Sentence: I'm glad I know sign language, it's pretty handy. - Prediction: Pun - Correct: Pun
+Sentence: I'm terrified of clocks. They're very alarming. - Prediction: Pun - Correct: Pun
+Sentence: I told my computer I needed a break, and it said, 'No problem, I'm already in bits.' - Prediction: Pun - Correct: Pun
+Sentence: A midget psychic escaped from prison. He was a small medium at large. - Prediction: Pun - Correct: Pun
+Sentence: Why did the coffee file a police report? It got mugged. - Prediction: Pun - Correct: Pun
+Sentence: I asked the AI for a joke, and it responded so promptly. - Prediction: Pun - Correct: Pun
+Sentence: That must be a loud musician. He's got a lot of amps. - Prediction: Pun - Correct: Pun
+Sentence: The calendar maker's days are numbered. - Prediction: Pun - Correct: Pun
+Sentence: Why did the biologist break up with the physicist? They had no chemistry. - Prediction: Pun - Correct: Pun
+Sentence: I asked a sign painter for a good pun. He gave me a sign. - Prediction: Pun - Correct: Pun
+Sentence: The life of a lighthouse keeper is very isolated, but they're always in the spotlight. - Prediction: Pun - Correct: Pun
+Sentence: The optometrist fell into his lens-grinding machine and made a spectacle of himself. - Prediction: Pun - Correct: Pun
+Sentence: A police officer ticketed me for my fantastic driving. He said, 'It's a fine.' - Prediction: Pun - Correct: Pun
+Sentence: I wasn't originally going to get a brain transplant, but then I changed my mind. - Prediction: Pun - Correct: Pun
+Sentence: He was a carpenter, but he was fired. He just wasn't nailing it. - Prediction: Pun - Correct: Pun
+Sentence: The magician was walking down the street and turned into a drugstore. - Prediction: Pun - Correct: Pun
+Sentence: The soldier who survived mustard gas and pepper spray is now a seasoned veteran. - Prediction: Pun - Correct: Pun
+Sentence: My girlfriend said she was leaving me because I'm obsessed with baseball. I told her she was way off base. - Prediction: Pun - Correct: Pun
+Sentence: He had a photographic memory, but it was never developed. - Prediction: Pun - Correct: Pun
+Sentence: I used to be a historian, but I realized there was no future in it. - Prediction: Pun - Correct: Pun
+Sentence: A prisoner's favorite punctuation mark is a period. It marks the end of his sentence. - Prediction: Pun - Correct: Pun
+Sentence: The duck told the waiter to put the drink on his bill. - Prediction: Pun - Correct: Pun
+Sentence: I'm thinking of becoming a pilot. My career would really take off. - Prediction: Pun - Correct: Pun
+Sentence: The man who survived a fall from a 10-story building was not worried. He was just a little shaken. - Prediction: Pun - Correct: Pun
+Sentence: Why was the math book sad? It had too many problems. - Prediction: Pun - Correct: Pun
+Sentence: The past, the present, and the future walked into a bar. It was tense. - Prediction: Pun - Correct: Pun
+Sentence: The geography teacher was fired for getting lost. He couldn't find his bearings. - Prediction: Pun - Correct: Pun
+Sentence: What's the difference between a zookeeper and a gambler? One has a stake in the lions, the other has lions at stake. - Prediction: Pun - Correct: Pun
+Sentence: Why are musicians so bad at fishing? They're always dropping the bass. - Prediction: Pun - Correct: Pun
+Sentence: I tried to sue the airline for losing my luggage. I lost my case. - Prediction: Pun - Correct: Pun
+Sentence: The tailor was fired from his job. It seems he just wasn't suited for the work. - Prediction: Pun - Correct: Pun
+Sentence: The train is scheduled to arrive at 5:00 PM. - Prediction: Pun - Correct: Non-Pun
+Sentence: My favorite color is blue, but I also like green. - Prediction: Pun - Correct: Non-Pun
+Sentence: I need to buy groceries after work. - Prediction: Pun - Correct: Non-Pun
+Sentence: The library is closed on Sundays. - Prediction: Pun - Correct: Non-Pun
+Sentence: This new software update has several security patches. - Prediction: Pun - Correct: Non-Pun
+Sentence: The Earth revolves around the Sun in approximately 365 days. - Prediction: Pun - Correct: Non-Pun
+Sentence: I am planning to visit my family next month. - Prediction: Pun - Correct: Non-Pun
+Sentence: The dog barked at the mail carrier. - Prediction: Pun - Correct: Non-Pun
+Sentence: This book provides a detailed history of the Roman Empire. - Prediction: Pun - Correct: Non-Pun
+Sentence: She is learning to play the piano. - Prediction: Pun - Correct: Non-Pun
+Sentence: The meeting was postponed due to a scheduling conflict. - Prediction: Pun - Correct: Non-Pun
+Sentence: Remember to charge your phone before you leave. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The recipe requires two cups of flour and one cup of sugar. - Prediction: Pun - Correct: Non-Pun
+Sentence: Mount Everest is the tallest mountain in the world. - Prediction: Pun - Correct: Non-Pun
+Sentence: He wore a heavy coat because it was cold outside. - Prediction: Pun - Correct: Non-Pun
+Sentence: The children are playing in the park. - Prediction: Pun - Correct: Non-Pun
+Sentence: I prefer to drink coffee in the morning. - Prediction: Pun - Correct: Non-Pun
+Sentence: The car's engine is making a strange noise. - Prediction: Pun - Correct: Non-Pun
+Sentence: We watched a documentary about penguins last night. - Prediction: Pun - Correct: Non-Pun
+Sentence: The final exam will cover all chapters from the textbook. - Prediction: Pun - Correct: Non-Pun
+Sentence: The sky is very clear tonight, so we can see the stars. - Prediction: Pun - Correct: Non-Pun
+Sentence: My computer is running slowly; I should probably restart it. - Prediction: Pun - Correct: Non-Pun
+Sentence: The restaurant's special of the day is grilled salmon. - Prediction: Pun - Correct: Non-Pun
+Sentence: She forgot her umbrella and got wet in the rain. - Prediction: Pun - Correct: Non-Pun
+Sentence: The presentation will begin in ten minutes. - Prediction: Pun - Correct: Non-Pun
+Sentence: Many people commute to the city for work. - Prediction: Pun - Correct: Non-Pun
+Sentence: The museum's new exhibit features modern art. - Prediction: Pun - Correct: Non-Pun
+Sentence: He is studying to become a mechanical engineer. - Prediction: Pun - Correct: Non-Pun
+Sentence: The traffic was heavy on the highway this morning. - Prediction: Pun - Correct: Non-Pun
+Sentence: I have a dentist appointment on Friday. - Prediction: Pun - Correct: Non-Pun
+Sentence: The new policy will take effect on the first of the month. - Prediction: Pun - Correct: Non-Pun
+Sentence: A horse walks into a bar. Several patrons are startled and leave, as a horse in a bar is an unexpected and potentially dangerous situation. - Prediction: Pun - Correct: Non-Pun
+Sentence: The company reported its quarterly earnings today. - Prediction: Pun - Correct: Non-Pun
+Sentence: She is painting the walls of her living room. - Prediction: Pun - Correct: Non-Pun
+Sentence: The store will close at 9:00 PM tonight. - Prediction: Pun - Correct: Non-Pun
+Sentence: I need to get my car's oil changed soon. - Prediction: Pun - Correct: Non-Pun
+Sentence: The national park is home to many different species of wildlife. - Prediction: Pun - Correct: Non-Pun
+Sentence: He is allergic to peanuts. - Prediction: Pun - Correct: Non-Pun
+Sentence: The flight was delayed for two hours. - Prediction: Pun - Correct: Non-Pun
+Sentence: The package should be delivered by tomorrow afternoon. - Prediction: Pun - Correct: Non-Pun
+Sentence: I finished reading the novel yesterday. - Prediction: Pun - Correct: Non-Pun
+Sentence: The project deadline is next Wednesday. - Prediction: Pun - Correct: Non-Pun
+Sentence: The wind is blowing strongly from the west. - Prediction: Pun - Correct: Non-Pun
+Sentence: She is training for a marathon. - Prediction: Pun - Correct: Non-Pun
+Sentence: The phone's battery is almost dead. - Prediction: Pun - Correct: Non-Pun
+Sentence: The baby is sleeping in his crib. - Prediction: Pun - Correct: Non-Pun
+Sentence: The monkeys are at home - Prediction: Pun - Correct: Non-Pun
+Sentence: The government announced new environmental regulations. - Prediction: Pun - Correct: Non-Pun
+Sentence: He is taking a course on statistics and data analysis. - Prediction: Pun - Correct: Non-Pun
+Sentence: The cat is sitting on the windowsill. - Prediction: Pun - Correct: Non-Pun
