@@ -1,0 +1,152 @@
+======================================================================
+NUM_EPOCHS: 3, BATCH_SIZE: 16, TRAINING_SIZE: 771, VAL_SIZE: 257, TEST_SIZE: 258,LEARNING_RATE: 1e-05
+
+custom testing with non-puns as provers/idioms
+======================================================================
+
+Average Training Loss for epoch 1: 0.6144
+---------------------------------------------
+Validation Accuracy: 0.8638
+
+---------------------------------------------
+Average Training Loss for epoch 2: 0.3373
+---------------------------------------------
+Validation Accuracy: 0.9066
+
+---------------------------------------------
+Average Training Loss for epoch 3: 0.1703
+---------------------------------------------
+Validation Accuracy: 0.9144
+
+---------------------------------------------
+=============================================
+Validation for the new model
+
+              precision    recall  f1-score   support
+
+     Non-Pun       0.89      0.91      0.90       129
+         Pun       0.90      0.88      0.89       129
+
+    accuracy                           0.90       258
+   macro avg       0.90      0.90      0.90       258
+weighted avg       0.90      0.90      0.90       258
+=============================================
+
+
+===========================================================================
+Custom Testing Summary
+Puns: (42/50 correct)
+Non-Puns: (44/50 correct)
+
+=============================================
+Performance of the model with new sentences
+              precision    recall  f1-score   support
+
+     Non-Pun       0.85      0.88      0.86        50
+         Pun       0.88      0.84      0.86        50
+
+    accuracy                           0.86       100
+   macro avg       0.86      0.86      0.86       100
+weighted avg       0.86      0.86      0.86       100
+=============================================
+
+Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why did the scarecrow win an award? Because he was outstanding in his field. - Prediction: Pun - Correct: Pun
+Sentence: I used to be a baker, but I couldn't make enough dough. - Prediction: Pun - Correct: Pun
+Sentence: I don't trust stairs. They're always up to something. - Prediction: Pun - Correct: Pun
+Sentence: Did you hear about the restaurant on the moon? Great food, no atmosphere. - Prediction: Pun - Correct: Pun
+Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Non-Pun - Correct: Pun
+Sentence: What's the best thing about Switzerland? I don't know, but the flag is a big plus. - Prediction: Pun - Correct: Pun
+Sentence: I stayed up all night to see where the sun went. Then it dawned on me. - Prediction: Pun - Correct: Pun
+Sentence: The lumberjack loved his new computer. He especially liked logging in. - Prediction: Pun - Correct: Pun
+Sentence: A ghost walked into a bar and ordered a spirit. - Prediction: Pun - Correct: Pun
+Sentence: I wondered why the frisbee was getting bigger. Then it hit me. - Prediction: Pun - Correct: Pun
+Sentence: What do you get from a pampered cow? Spoiled milk. - Prediction: Non-Pun - Correct: Pun
+Sentence: The invention of the shovel was groundbreaking. - Prediction: Pun - Correct: Pun
+Sentence: I'm trying to learn to handle my fear of elevators. I'm taking steps to avoid them. - Prediction: Pun - Correct: Pun
+Sentence: I'm reading a horror story in Braille. Something bad is about to happen, I can feel it. - Prediction: Pun - Correct: Pun
+Sentence: A bee's hair is always sticky because it uses a honeycomb. - Prediction: Non-Pun - Correct: Pun
+Sentence: What do you call a pig that does karate? A pork chop. - Prediction: Pun - Correct: Pun
+Sentence: Why are fish so smart? Because they live in schools. - Prediction: Non-Pun - Correct: Pun
+Sentence: My sea sickness comes in waves. - Prediction: Non-Pun - Correct: Pun
+Sentence: I'm glad I know sign language, it's pretty handy. - Prediction: Pun - Correct: Pun
+Sentence: I'm terrified of clocks. They're very alarming. - Prediction: Pun - Correct: Pun
+Sentence: I told my computer I needed a break, and it said, 'No problem, I'm already in bits.' - Prediction: Pun - Correct: Pun
+Sentence: A midget psychic escaped from prison. He was a small medium at large. - Prediction: Pun - Correct: Pun
+Sentence: Why did the coffee file a police report? It got mugged. - Prediction: Pun - Correct: Pun
+Sentence: I asked the AI for a joke, and it responded so promptly. - Prediction: Pun - Correct: Pun
+Sentence: That must be a loud musician. He's got a lot of amps. - Prediction: Pun - Correct: Pun
+Sentence: The calendar maker's days are numbered. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why did the biologist break up with the physicist? They had no chemistry. - Prediction: Pun - Correct: Pun
+Sentence: I asked a sign painter for a good pun. He gave me a sign. - Prediction: Pun - Correct: Pun
+Sentence: The life of a lighthouse keeper is very isolated, but they're always in the spotlight. - Prediction: Pun - Correct: Pun
+Sentence: The optometrist fell into his lens-grinding machine and made a spectacle of himself. - Prediction: Pun - Correct: Pun
+Sentence: A police officer ticketed me for my fantastic driving. He said, 'It's a fine.' - Prediction: Pun - Correct: Pun
+Sentence: I wasn't originally going to get a brain transplant, but then I changed my mind. - Prediction: Pun - Correct: Pun
+Sentence: He was a carpenter, but he was fired. He just wasn't nailing it. - Prediction: Pun - Correct: Pun
+Sentence: The magician was walking down the street and turned into a drugstore. - Prediction: Pun - Correct: Pun
+Sentence: The soldier who survived mustard gas and pepper spray is now a seasoned veteran. - Prediction: Pun - Correct: Pun
+Sentence: My girlfriend said she was leaving me because I'm obsessed with baseball. I told her she was way off base. - Prediction: Pun - Correct: Pun
+Sentence: He had a photographic memory, but it was never developed. - Prediction: Pun - Correct: Pun
+Sentence: I used to be a historian, but I realized there was no future in it. - Prediction: Pun - Correct: Pun
+Sentence: A prisoner's favorite punctuation mark is a period. It marks the end of his sentence. - Prediction: Pun - Correct: Pun
+Sentence: The duck told the waiter to put the drink on his bill. - Prediction: Pun - Correct: Pun
+Sentence: I'm thinking of becoming a pilot. My career would really take off. - Prediction: Pun - Correct: Pun
+Sentence: The man who survived a fall from a 10-story building was not worried. He was just a little shaken. - Prediction: Pun - Correct: Pun
+Sentence: Why was the math book sad? It had too many problems. - Prediction: Pun - Correct: Pun
+Sentence: The past, the present, and the future walked into a bar. It was tense. - Prediction: Pun - Correct: Pun
+Sentence: The geography teacher was fired for getting lost. He couldn't find his bearings. - Prediction: Pun - Correct: Pun
+Sentence: What's the difference between a zookeeper and a gambler? One has a stake in the lions, the other has lions at stake. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why are musicians so bad at fishing? They're always dropping the bass. - Prediction: Pun - Correct: Pun
+Sentence: I tried to sue the airline for losing my luggage. I lost my case. - Prediction: Pun - Correct: Pun
+Sentence: The tailor was fired from his job. It seems he just wasn't suited for the work. - Prediction: Pun - Correct: Pun
+Sentence: Actions speak louder than words. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The early bird catches the worm. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A stitch in time saves nine. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Don't count your chickens before they hatch. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A watched pot never boils. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The grass is always greener on the other side. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Don't put all your eggs in one basket. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Every cloud has a silver lining. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A bird in the hand is worth two in the bush. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Better late than never. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Birds of a feather flock together. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Haste makes waste. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Curiosity killed the cat. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Don't judge a book by its cover. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: If it ain't broke, don't fix it. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Practice makes perfect. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: An apple a day keeps the doctor away. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Absence makes the heart grow fonder. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: It's raining cats and dogs. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: He let the cat out of the bag. - Prediction: Pun - Correct: Non-Pun
+Sentence: She spilled the beans. - Prediction: Pun - Correct: Non-Pun
+Sentence: You have to bite the bullet. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: He hit the nail on the head. - Prediction: Pun - Correct: Non-Pun
+Sentence: That's the best of both worlds. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Don't cry over spilled milk. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Every dog has its day. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: That ship has sailed. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: We'll cross that bridge when we come to it. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: To kill two birds with one stone. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: He's sitting on the fence. - Prediction: Pun - Correct: Non-Pun
+Sentence: The pen is mightier than the sword. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A mind is like a parachute; it doesn't work if it's not open. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A clear conscience is the sign of a bad memory. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: We are all in the gutter, but some of us are looking at the stars. - Prediction: Pun - Correct: Non-Pun
+Sentence: I can resist everything except temptation. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Always forgive your enemies; nothing annoys them so much. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A committee is a group that keeps minutes and wastes hours. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Experience is the name everyone gives to their mistakes. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A man's home is his castle. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Politics makes strange bedfellows. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Misery loves company. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Why do they call it rush hour when nothing moves? - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A cynic knows the price of everything and the value of nothing. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The road to success is always under construction. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Money is the root of all evil. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: An ounce of prevention is worth a pound of cure. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: I'm not superstitious, but I am a little stitious. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: A closed mouth gathers no foot. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: Time flies - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: They wanted to paint the town red - Prediction: Pun - Correct: Non-Pun
