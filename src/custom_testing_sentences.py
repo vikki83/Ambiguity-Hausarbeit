@@ -121,10 +121,10 @@ CUSTOM_TESTING_SENTENCES = [
         "I finished reading the novel yesterday.",
         "The project deadline is next Wednesday.",
         "The wind is blowing strongly from the west.",
-        "She is training for a marathon.",
-        "The phone's battery is almost dead.",
+        "She is training for a marathon. Her parents would like to see her run.",
+        "The phone's battery is almost dead. I hope we could find a place to charge it.",
         "The baby is sleeping in his crib.",
-        "The monkeys are at home",
+        "The monkeys are at home.",
         "The government announced new environmental regulations.",
-        "He is taking a course on statistics and data analysis."
+        "He is taking a course on statistics and data analysis. I took it a year ago but failed it."
     ]

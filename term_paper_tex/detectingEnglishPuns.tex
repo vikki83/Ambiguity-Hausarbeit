@@ -1,0 +1,478 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2020}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{microtype}
+\renewcommand{\UrlFont}{\ttfamily\small}
+\newcommand\BibTeX{B\textsc{ib}\TeX}
+
+\usepackage{imakeidx}
+\makeindex
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage[
+	%leqno,
+	leqno,
+	%fleqn,
+	]{amsmath}
+\usepackage{xcolor}
+\newcommand{\Timm}[1]{{\color{blue}#1}}
+\renewcommand{\indexname}{Appendix 2: Index}
+	
+\title{Ambiguity in Humor: Detecting English Puns}
+
+\author{Viktoriia Tsosenko \\
+  Computational Linguistics Department \\
+  Heinrich Heine University D\"usseldorf \\
+  \texttt{Viktoriia.Tsosenko@hhu.de} \\}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+\pagestyle{plain}
+\thispagestyle{plain}
+
+%\tableofcontents
+\begin{abstract}
+Humor is a complex linguistic phenomenon, and puns are one of the good examples of how ambiguity creates amusement. Detecting puns automatically remains a challenging task for natural language processing systems because it requires understanding lexical ambiguity and context. This paper focuses on the automatic detection of homographic puns, which is the first step in computational humor analysis. For this purpose, we used a publicly available, pre-annotated dataset the \texttt{SemEval-2017 Task 7}, together with a pretrained BERT-based language model. We fine-tuned the BERT model using PyTorch to classify sentences as either containing a pun or not. The goal of this work is to implement a simple but effective model for pun detection and to get experience with data handling and machine learning.
+The findings may provide a starting point for more advanced research, such as pun location or interpretation, and highlight the difficulties of modeling humor computationally.
+\end{abstract}
+
+
+\section{Introduction}
+
+Human communication is difficult to imagine without humor. “If computers are ever going to communicate naturally and effectively with humans, they must be able to use humor” \citep[][p.59]{binsted2006computational}. Humor also has its “beneficial aspects, because it banishes sadness and boredom, puts the individual in an optimistic mood and, in general, lightens the load of everyday living” \citep[][p.4]{larkin2017overview}. Making machines \textit{understand} and \textit{produce} humor is therefore beneficial for people. Among the various forms of humor, puns are particularly interesting because they exploit the multiple meanings of words or the similarity of sounds to generate unexpected interpretations. It is known that words often have multiple meanings, and \citet{zipf1949human} indicates that the most frequently used words tend to have more senses than less frequent ones.
+
+\vspace{4pt}
+Studying puns is not only relevant for humor research, but also useful in real-life applications. Automatic pun detection can improve tasks such as chatbot interaction, sentiment analysis, and figurative language understanding, where recognizing humor or ambiguous language is essential to respond naturally.
+This paper focuses on homographic pun detection, which occurs when one and the same word carries multiple meanings in a sentence. The \texttt{SemEval-2017 Task 7} dataset provides English sentences labeled as a pun or not a pun. The task represents a binary classification problem: given a sentence, the model must decide whether it contains a pun.
+The research objectives are as follows:
+
+\begin{enumerate}
+    \item To preprocess and prepare the \texttt{SemEval-2017 Task 7} dataset for model training
+
+    \item To fine-tune a pre-trained BERT model for the binary classification of sentences as pun or non-pun
+    \item To evaluate the model’s performance using standard metrics such as accuracy and F1-score
+    \item To analyze the results of transformer-based approaches in understanding humor and ambiguity
+\end{enumerate}
+
+
+
+\section{Humor and Ambiguity}
+
+The perception of what humor is has undergone major changes throughout the history. \citet{larkin2017overview} believes that humor as we know it today, originates from the 20th century. There is no single, universally accepted definition of humor though. Some writers believe it is even impossible to define what exactly humor, as a term, means \citep{attardo1994linguistic}.
+\vspace{4pt}
+
+Plenty of linguistic devices are used to create humor. In Ancient Greece and Rome, Aristotle and other classic writers tried to find out what linguistic techniques were used to produce laughter, and ambiguity was listed among them. In Rhetorics, Aristotle talks about “twisting from the proper and apparent sense”, or giving a word “a different ‘turn’” that awakes laughter. He mentions “temporary deception practiced upon the listener”, comparing it with some kind of riddle. When listening to a joke, the listener “does not at once trace the resemblance”, but by “discovering its meaning, the listener learns something new” and is therefore experiencing a satisfying mental “aha!” moment \citep[][p.319-320]{aristotle2009rhetoric}. This is a good evidence that ambiguity in humor has interested people starting from Ancient Times.
+\vspace{4pt}
+
+The examples below illustrate how ambiguity works at different linguistic levels (morphological, lexical, syntactic etc.), and how humor depends on it.
+
+\paragraph{Structural ambiguity} \citet{dubinsky2011understanding} presents a joke from the Dilbert cartoon (p.56): 
+
+\begin{quote}
+\textit{Person A to Person B:} Would you like to buy advertising in my new magazine called Gullible World? We have between one and two billion readers!\\[6pt]
+\textit{Some time later, Person A to Person C:} I figured out how to make three readers sound like a lot.
+\end{quote}
+
+The humorous phrase \textit{one and two billion readers} could mean:
+\begin{enumerate}
+    \item \verb|[[one and two] billion]|
+    \item \verb|[one] and [two billion]|
+\end{enumerate}
+
+\paragraph{Compound words} \citep[][p.44]{dubinsky2011understanding}: 
+
+\begin{enumerate}
+    \item The word \textit{man}: ``while a milkman delivers milk, you really don't want your garbagemen or firemen bringing garbage or fire''.
+
+    \item ``In noun + noun compounds, sometimes the first noun tells you what the second one is made of or with, as in \textit{cheesecake} or \textit{apple pie}. Sometimes you hope that it doesn't, as in \textit{shepherd pie} (more commonly known as \textit{shepherd's pie}) or \textit{Girl-scout cookies}. Or you find out that it does, and wish you hadn't, as in \textit{headcheese}.'' 
+\end{enumerate}
+
+
+\paragraph{Idioms} \citep[][p.46]{dubinsky2011understanding}, illustrated with an idiom \textit{a piece of me} (meaning “challenge to fight”) and its literal meaning:
+
+
+\begin{enumerate}
+    \item Frankenstein’s monster gets into an argument at a bar and says: \textit{“You want a piece of me? Huh? Huh? You want a piece of me?”}.
+\end{enumerate}
+
+\section{Classification of Puns}
+“Punning is a form of humorous wordplay based on semantic ambiguity between two phonologically similar words – the pun and the target – in a context where both meanings are more or less acceptable” \citep[][p.1]{pallmann2025whats}.
+\vspace{4pt}
+
+There are different types of puns. The most relevant ones for natural language processing application are homophonic and homographic puns.
+\paragraph{Homophones} Homophonic puns sound the same, but their spelling is different. 
+\citet[][p.51]{dubinsky2011understanding} refers to a clear example from a 2001 FoxTrot panel:
+\begin{enumerate}
+    \item Jason Fox and his friend Marcus show seven carved pumpkins in a row.  On the pumpkins, they carved, in order: the number “3,” a decimal point, then “1,” “4,” “1,” “5,” and “9.”Jason tells his sister: \textit{We’re calling it “pumpkin pi.”}
+\end{enumerate}
+ 
+The joke relies on the homophone pair \textit{pie} (as in pumpkin pie) and \textit{pi} (a mathematical constant). 
+
+\paragraph{Homographs} Homographic puns share the same spelling, as in:
+
+\begin{enumerate}
+    \item I used to be a banker, but I lost \textit{interest}.
+\end{enumerate}
+Interest can mean curiosity and money earned on savings.
+\vspace{4pt}
+
+It is important to mention congruity between the two senses when talking about puns. “Nothing is more futile than the irrelevant pun that is based on only a verbal similarity and brings out no contrast, innuendo, or congruity of meaning” (Stanford, 1972, p.72). With no semantic opposition in the punning text, it will not be a joke anymore \citep{hempelmann2017puns}. Raskin expressed that puns, based “on purely phonetical and not semantical relations between words” are called “bad puns” (1985, p.116). 
+
+\vspace{4pt}
+Understanding a pun often requires recognizing multiple meanings simultaneously, which is easy and intuitive for humans, but remains difficult for machines. Next chapters are dedicated to the automatic pun detection, namely of homographs. 
+
+
+\section{Dataset}\label{background}
+
+\subsection{Dataset Overview}
+
+The \texttt{SemEval-2017 Task 7} includes six separate files with homographic puns and six with heterographic ones. 
+For this study, only the homographic pun dataset is relevant, which consists of three pairs of files: each pair includes a \texttt{.xml} file with sentences and a corresponding \texttt{.gold} file with annotations.
+It is structured as follows:
+\vspace{6pt}
+
+\textbf{Subtask 1: Pun Detection}
+
+The \texttt{.xml} file contains 2250 annotated sentences, each with its own \textit{sentence ID}.  
+Each token in a sentence also has its own \textit{ID}.  
+The corresponding \texttt{.gold} file provides labels for each sentence ID (1 for pun, 0 for no pun).
+\vspace{6pt}
+
+\textbf{Subtask 2: Pun Location}
+
+
+The \texttt{.xml} file includes only pun sentences (1607).  
+The \texttt{.gold} file specifies the position of the punning word in each sentence by its ID.
+\vspace{6pt}
+
+\textbf{Subtask 3: Sense Annotation}
+
+The \texttt{.xml} file contains 1298 sentences with puns, where the punning word is annotated with two different WordNet sense IDs, representing its two possible meanings in context.
+The \texttt{.gold} file with these annotations indicates the correct senses.
+
+\vspace{4pt}
+For this paper, only \textbf{Subtask 1: Pun Detection} was used, split into 3 subsets, namely: a training set, a validation set and a test set. 
+It is important to mention what kind of sentences represent the non-pun class in this dataset. Non-Puns from SemEval are mostly proverbs, idioms, or other forms of figurative speech that are often used to create humorous effect:
+
+\begin{enumerate}
+    \item[(1)] \textbf{hom\_17}: ``You have two choices for dinner: Take it or Leave it.'' 
+    \item[(2)] \textbf{hom\_57}: ``It’s easy to be wise after the event.'' 
+    \item[(3)] \textbf{hom\_65}: ``If all appears to go well, you missed something.'' 
+\end{enumerate}
+
+(1) is an example of a set expression, (2) is a proverb and (3) is a humorous saying. Such sentences are not "normal" declaratives, they are often abstract, full of wisdom and might sound old-fashioned in a way. % описать лучше какие они 
+
+\subsection{Dataset Preparation}
+
+Before proceeding with the fine-tuning we had to prepare the dataset, so Bert can understand it. The file subtask1-homographic-test.xml is structured as a tree. Consider the following sentence from the dataset:
+\begin{footnotesize}
+\begin{lstlisting}[language=XML, xleftmargin=10pt]
+<text id="hom_13">
+  <word id="hom_13_1">Diligent</word>
+  <word id="hom_13_2">youth</word>
+  <word id="hom_13_3">makes</word>
+  <word id="hom_13_4">easy</word>
+  <word id="hom_13_5">age</word>
+  <word id="hom_13_6">.</word>
+</text>
+\end{lstlisting}
+\end{footnotesize}
+In the example above, 
+\texttt{\textless text\textgreater} elements represent sentences, divided into individual 
+\texttt{\textless word\textgreater} elements. 
+Each \texttt{\textless text\textgreater} has an ID with the corresponding IDs for its child nodes. 
+To parse the raw \texttt{.xml} file, Python's built-in \texttt{xml.etree.ElementTree} library was used. Every individual word node of the same \texttt{\textless text\textgreater} was collected and joined together into the full sentence. The parsed sentences were merged afterwards with their labels from the \texttt{.gold} file based on the ID.
+
+
+With 1607 pun- and 643 non-pun sentences, the dataset \texttt{Subtask 1: Pun Detection} is imbalanced. To avoid the bias of predicting the majority class, we used \texttt{class weights} for imbalanced data and to maintain the distribution of puns and non-puns across all splits, we added \texttt{stratified sampling}. Finally, we split the imbalanced dataset into 70\% for training, 15\% for validation and 15\% for testing.  
+
+\section{Fine-Tuning Preparation}
+\subsection{Classifier}
+
+The classifier was build using transformers from Hugging Face (\texttt{BertTokenizer}, \texttt{BertForSequenceClassification}), with the model \texttt{bert-base-uncased}. 
+
+BERT requires numbers as an input, so the merged sentences from the dataset were tokenized using \texttt{BertTokenizer}. The table below illustarates how the model sees and tokenizes a sentence: 
+
+\begin{table}[h]
+\centering
+\label{tab:bert_tokens}
+\begin{small}
+\begin{verbatim}
+Tokens: [CLS] i    kept  ...  cut  [SEP]
+IDs:    101   1045 2921  ...  3013 102
+\end{verbatim}
+\caption{BERT Input Representation}
+\end{small}
+\end{table}
+
+As seen in Table 1, BERT adds two special tokens to each sentence, namely [CLS] (to store the meaning of the sentence) and [SEP] (a sentence separator). The [CLS] tokens gather values of each sentence that are used in the later step for classification.
+
+Since the model \texttt{bert-base-uncased} was pretrained on a large volume of unlabeled English data, it learnt “an inner representation of the English language” through Masked Language Modelling and Next Sentence Prediction \citep{hugginface_bert_uncased}. When combined with the class \texttt{BertForSequenceClassification}, BERT is able to perform classification tasks. It contains a linear layer that uses weights from [CLS] tokens and converts them into logits (raw scores for each possible class, e.g.[-1.5, 2.8]) \citep{hugginface_course}. This way, the model chooses the highest score between two indexes and matches 0 to a non-pun and 1 to a pun. 
+
+\subsection{Training. Validation. Testing}
+
+The three phases were conducted by implementing PyTorch. 
+
+Table 2 illustrates what hyperparameters were used.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|ll|}
+\hline
+\small % Sizing down to 10pt 
+\setlength{\tabcolsep}{4pt} % Reducing space between columns
+\textbf{Hyperparameter} & \textbf{Value} \\ 
+Redproducibility       & 42 \\ 
+Optimizer              & AdamW \\ 
+Learning Rate          & $1 \times 10^{-5}$ \\ 
+Batch Size             & 16 \\ 
+Epochs                 & 2--4 \\ \hline
+\end{tabular}
+\caption{Model Training Hyperparameters}
+\label{tab:hyperparameters}
+\end{table}
+
+Training was set by the mode \texttt{.train()} that activates two layers (dropout and batch normalization). It receives  \texttt{input\_ids},  \texttt{attention\_mask} and  \texttt{labels} (passed directly to the model). After each batch, old gradients are removed by \texttt{.zero\_grad()} and weights are updated with \texttt{.step()}.
+
+
+For validation and testing, the mode \texttt{.eval()} was used to deactivate dropout layers and \texttt{torch.no\_grad()} to avoid gradient calculation, so the model concentrates only on a forward propagation to make a prediction. Similar to training, both validationn and testing  receive \texttt{input\_ids},  \texttt{attention\_mask} and  \texttt{labels}, but the \texttt{labels} for them are not used for predictions and are revealed only afterwards to check their accuracy. The model's accuracy was calculated with \texttt{torch.argmax(logits, dim=-1)} that matches logits with the highest value for either puns or non-puns. 
+
+
+\section{Results}
+\subsection{Classification Metrics}
+
+To evaluate the model's performance, the \texttt{classification\_report} function from the \texttt{sklearn.metrics} module was used. It includes a text report showing the main classification metrics (such as precision, recall and f1-score) and provides averages to understand overall performance in a better way (namely accuracy, macro average and weighted average).
+
+
+For reproducibility reasons, the training was conducted with a fixed seed value. The most relevant reports are included in this paper (more reports can be found on our GitHub).
+
+
+\subsection{Fine-Tuning with Imbalanced Dataset}
+
+The model performed well from the first runs. With some hyperparameters adjusted for each run, the accuracy remained between 90 and 95\%.
+
+\begin{table}[h]
+\centering
+\small % Sizing down to 10pt 
+\setlength{\tabcolsep}{4pt} % Reducing space between columns
+\begin{tabular}{l|cccc}
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Supp.} \\ 
+\hline
+Non-Pun      & 0.93 & 0.82 & 0.87 & 97  \\
+Pun          & 0.93 & 0.98 & 0.95 & 241 \\ 
+\hline
+Accuracy     &      &      & \textbf{0.93} & 338 \\
+Macro Avg    & 0.93 & 0.90 & 0.91 & 338 \\
+Wtd. Avg     & 0.93 & 0.93 & 0.93 & 338 \\ 
+\hline
+\end{tabular}
+\caption{Classification Report 1 (2 epochs)}
+\label{tab:classification_report}
+\end{table}
+
+The results in Table 3 demonstrate high accuracy. Precision of predicting both puns and non-puns is correct 93\% of the time.  Recall differs between both classes for about 15\%, favoring puns. Since the original SemEval dataset is imbalanced and has much more pun sentences, the model could have learnt that to choose a pun is always a correct guess, and thus, it became biased.
+To achieve better recall scores for non-puns, the number of examples from the majority class was reduced to match the number of the non-puns. 
+
+
+\subsection{Fine-Tuning with Balanced Dataset}
+
+As a result, the imbalanced SemEval dataset was changed to a balanced one, with 643 sentences for puns and 643 for non-puns. This way the model should learn both classes equally.
+Several runs were conducted using different hyperparameters to determine the best results.
+
+\begin{table}[h]
+\centering
+\small % ACL standard for tables [cite: 64]
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{l|ccc}
+\hline
+\multicolumn{4}{c}{\textbf{Report 6}} \\
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+\hline
+Non-Pun  & 0.92 & 0.86 & 0.89 \\
+Pun      & 0.86 & 0.93 & 0.89 \\ 
+\hline
+Support  & \multicolumn{3}{c}{193} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.89}} \\
+\hline
+\multicolumn{4}{c}{} \\ % Empty row for visual spacing
+\hline
+\multicolumn{4}{c}{\textbf{Report 8}} \\
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+\hline
+Non-Pun  & 0.89 & 0.91 & 0.90 \\
+Pun      & 0.90 & 0.88 & 0.89 \\ 
+\hline
+Support  & \multicolumn{3}{c}{258} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.90}} \\
+\hline
+\end{tabular}
+\caption{Comparison of model performance with different data splits}
+\label{tab:model_comparison}
+\end{table}
+
+Report 6 used a 70/15/15 data split, while Report 8 a 60/20/20 split. With the same number of batch size (16) and different number of epochs (3 for Report 6 and 2 for Report 8), both models achieved similar overall accuracy (89\% and 90\%). However, their performance differs a bit. Recall for Report 6 indicates that 93\% of puns were detected correctly, while for the non-puns this score is 7\% lower, indicating again a slight bias toward predicting puns. In contrast, Report 8 appears to be more balanced, with recall scores for Puns and Non-Puns remaining closer together (88\% and 91\% respectively). 
+
+
+As for the validation accuracy, there were some differences as well. In Report 6 it started at 0.9016 and did not change neither for epoch 2 nor for epoch 3, which suggests that the model reached it potential quickly. It was different with Report 8, its validation accuracy increased from 0.8638 to 0.9066, indicating better learning. We also trained the model for a 60/20/20 split with 3 epochs (see classification report 7 on GitHub). Though there was an increase in validation accuracy (from 0.9066 to 0.9144), the model's performance did not change at all, depicting the same metrics as in Report 7. 
+
+
+Thus, Report 8 indicates that despite the smaller training set, the 60/20/20 split with 2 epochs was a better option for this particular dataset. Its overall accuracy is slightly lower, as in Table 3 (90\% vs 93\%), but it shows nearly identical precision and recall scores for both classes.
+
+ 
+\section{Diagnostic Evaluation}
+
+\subsection{Control Set}
+
+As stated in Dataset Overview, the non-pun examples from SemEval are represented by figurative language. The next step of this paper was to test the classifier on the  declaratives that are not part of figurative speech. To achieve this, a new set with 100 samples (50 puns and 50 non-puns) was created. Declarative statements with no \textit{clever} structure, were chosen for the non-pun category, as in the examples below:
+
+\begin{enumerate}
+    \item[(4)] ``I need to buy groceries after work.'' 
+    \item[(5)] ``The project deadline is next Wednesday.''
+\end{enumerate}
+
+(4) and (5) are just declarative sentences, with no characteristics of a proverb or an idiom. If BERT learned how to detect a pun, it should be able to classify the new non-puns correctly, even though it was not trained on such examples before.  
+\vspace{4pt}
+
+The diagnostic test was conducted on the same models from Table 4. 
+\vspace{4pt}
+
+\begin{table}[h]
+\centering
+\small 
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{l|ccc}
+\hline
+\multicolumn{4}{c}{\textbf{Report 6}} \\
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+\hline
+Non-Pun  & 0.80 & 0.16 & 0.27 \\
+Pun      & 0.53 & 0.96 & 0.69 \\ 
+\hline
+Support  & \multicolumn{3}{c}{100} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.56}} \\
+\hline
+\multicolumn{4}{c}{} \\ % Spacing row
+\hline
+\multicolumn{4}{c}{\textbf{Report 8}} \\
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+\hline
+Non-Pun  & 0.42 & 0.10 & 0.16 \\
+Pun      & 0.49 & 0.86 & 0.62 \\ 
+\hline
+Support  & \multicolumn{3}{c}{100} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.48}} \\
+\hline
+\end{tabular}
+\caption{Diagnostic Evaluation using a control set}
+\label{tab:diagnostic_eval}
+\end{table}
+
+The result for the new set was not as expected (Table 5): accuracy sank to 48-56\%, depending on the hyperparameters used. Though both models managed to detect most of the puns, they missed more than half of the opposite class, labeling most of the non-puns as puns. 
+
+
+Report 6 was trained on more data than Report 8 (900 samples vs 771 samples, respectively), which led to a higher accuracy of the first one. However, it does not indicate that Report 6 performs better. Both models failed at predicting puns (recall 16\% and 10\%).
+
+
+It appears that BERT did not actually learn what puns are, instead, it learnt what belongs to class “0”, namely proverb-like or idiom-like structure and if the sentence did not match the structure, it automatically was labeled as “1”. That is why the new non-pun sentences fell to the category of puns. So it means that Table 3 and Table 4 show high accuracy not because the classifier was actually able to \textit{detect} puns or ambiguity, it was taught to recognize proverbs and idioms instead. 
+
+As a solution, we increased the size of the SemEval Dataset by adding 643 non-puns with literal meaning to match the existing 643 proverbs/idioms. The pun and the non-pun classes include now 1286 samples each. The model was then retrained and its performance was evaluated again.
+
+
+\subsection{Updating SemEval Dataset}
+% 70/15/15 - 3 epochs overfitted
+% 70/15/15 -  2 epochs accuracy 95%, custom testing 89%
+As seen in Table 6, updating the dataset has resulted in a high model's performance, with non-pun recall rising from 2\% to 92\%. The overall accuracy increased to 89\% in comparison to Table 5. 
+
+\begin{table}[h]
+\centering
+\small % Sets font to 10pt per ACL guidelines
+\setlength{\tabcolsep}{4pt} % Squeezes column width
+\begin{tabular}{l|cccc}
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Supp.} \\ 
+\hline
+Non-Pun      & 0.87 & 0.92 & 0.89 & 50  \\
+Pun          & 0.91 & 0.86 & 0.89 & 50  \\ 
+\hline
+Accuracy     &      &      & \textbf{0.89} & 100 \\
+Macro Avg    & 0.89 & 0.89 & 0.89 & 100 \\
+Wtd. Avg     & 0.89 & 0.89 & 0.89 & 100 \\ 
+\hline
+\end{tabular}
+\caption{Control test with updated SemEval dataset.}
+\label{tab:updated_control_test}
+\end{table}
+
+Some of the misclassified non-puns:
+
+\begin{enumerate}
+    \item[(6)] ``The \textit{government} announced new environmental regulations."
+    \item[(7)] ``He is allergic to \textit{peanuts}."
+    \item[(8)] ``Many people \textit{commute} to the city for work."
+\end{enumerate}
+
+The words in italics from (6-8) are not used ambiguously, but can be often found in pun sentences. For example, sentences with the same words found in the SemEval dataset (hom\_1913, hom\_820 and hom\_1955) are puns, which explains why sentences (6-8) were misclassified. It also demonstartes that BERT memorized the vocabulary of the training set and what category they belonged to. Thus, when receiving a new sentence containig a word from the training set, BERT makes its prediction based on what it learned before.
+
+\vspace{4pt}
+Some of the misclassified puns:
+
+\begin{enumerate}
+    \item[(9)] ``Why don't scientists trust atoms? Because they \textit{make up} everything."
+    \item[(10)] ``Why are skeletons so calm? Because nothing \textit{gets under their skin}." 
+    \item[(11)] ``I'm glad I know sign language, it's pretty \textit{handy}."
+\end{enumerate}
+
+Some of the puns from the SemEval dataset have a question-answer structure as in (9) and (10) but they were classified wrong by BERT. This means that the model classified them as a pun not because of the pattern recognition, but because it looked for the previously seen vocabulary and failed to find the same words in the training set. Additionally, (10) contains an idiom, that is why it could be also misclassified as a non-pun.                                                                                                                
+
+%%%%Due to BERT's ability to understand context bidirectionally, it is exeptionally good at recognizing ambiguous words. When a word refers to multiple contexts within one sentence, BERT merges them in one vector. It can be assumed that %%%%%%%
+
+
+\section{Validation Methods}
+There are two main ways to test the model, namely hold-out validation and cross-validation. 
+
+\subsection{Hold-out vs. Cross-validation}
+The results above were achieved using hold-out validation. In this method, the data is split into three fixed sets, so BERT never sees the testing or validation data during its training phase and evaluates on one fixed test set only.
+
+Cross validation, on the other hand, repeats this process several times. It trains separate models on different splits (e.g. 5 models and 5 splits) to make sure that every single sentence will eventually end up in a test set. After all the splits are done, it provides a final average score with the standard deviation. Cross validation shows a more reliable accuracy because it is based on several different versions of the data \citep{geeks_cross_val}.
+
+
+\subsection{Cross Validation}
+
+\begin{table}[h]
+\small % Sets font to 10pt per ACL guidelines
+\setlength{\tabcolsep}{4pt} % Squeezes column width
+\centering
+\label{tab:cv_summary}
+\begin{tabular}{lc}
+\hline
+\textbf{Metric} & \textbf{Score (Mean $\pm$ SD)} \\ \hline
+Accuracy        & $0.9331 \pm 0.0144$           \\
+F1 (Pun)        & $0.9325 \pm 0.0164$           \\
+F1 (Non-Pun)    & $0.9336 \pm 0.0128$           \\ \hline
+\end{tabular}
+\caption{ Cross-Validation Performance (5-Folds)}
+\end{table}
+
+
+
+ 
+
+\section{Conclusion}
+BERT is a powerfull language model that can perform different tasks when used with a classifier. The aim of this paper was to detect ambiguity in humor by training BERT to recognize puns. The fine-tuned model demonstrated high accuracy of 90\%-95\% but failed the diagnostic test by favoring puns. Updating the SemEval dataset to 1.800 training samples has resulted in a much better performance (92\% recall instead of 2\%) and a balanced F-1 score for both classes (89\%). 
+
+However, despite the model's accuracy of 89\%, it would be wrong to say that BERT understood what puns are. Instead, it developed a lexical bias based on the words from the training set. Which proves that detectining humor still remains a significant challenge for machine learning.
+
+\nocite{*}
+\bibliographystyle{acl_natbib}
+\bibliography{anthology,acl2020}
+
+\end{document}

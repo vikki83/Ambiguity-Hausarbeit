@@ -29,7 +29,7 @@ DEFAULT_DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASSIFICATION_NAMES = ['Non-Pun', 'Pun']
 ADD_SIMPLE_NON_PUNS = True   # True = add simple non-puns to SemEval dataset    | False = skip
 BALANCE_DATASET = True       # True = use equal amount of puns and non puns     | False = use the imbalanced dataset
-CROSS_VALIDATION = True      # True = run Cross Validation                      | False = do not run Cross Validation
+CROSS_VALIDATION = False      # True = run Cross Validation                      | False = do not run Cross Validation
 CUSTOM_TESTING = True        # True = run Custom Testing                        | False = do not run Custom Testing
 
 
@@ -176,13 +176,13 @@ def balance_dataset(df):
 
 def split_data(x, y):
     #Training 70%, Validation 15%, Test 15%
-    # x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
-    # x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
-    #                                                  stratify=y_train_val)
+    x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
+    x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
+                                                     stratify=y_train_val)
     # Training 60%, Validation 20%, Test 20%
-    x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
-    x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
-                                                      stratify=y_train_val)
+    # x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+    # x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
+    #                                                   stratify=y_train_val)
 
     return x_train, x_val, x_test, y_train, y_val, y_test
 
