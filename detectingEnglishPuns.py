@@ -2,9 +2,10 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import numpy as np
 import random
-import torch
 import time
 import os
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8" # Environment variable vor determinism
+import torch
 
 from transformers import BertTokenizer, BertForSequenceClassification
 from src.custom_testing_sentences import CUSTOM_TESTING_SENTENCES
@@ -45,7 +46,12 @@ def create_dataloader_from_data(x_data, y_data, tokenizer, maxlen, batch_size, s
     mask = encodings['attention_mask']
     labs = torch.tensor(y_data.values)
     dataset = TensorDataset(ids, mask, labs)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+
+    # To reproduce the same fixed results
+    generator = torch.Generator()
+    generator.manual_seed(SEED_VALUE)
+    
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, generator=generator)
 
 
 def prepare_dataset(dataset_source_file=None):
@@ -161,8 +167,8 @@ def balance_dataset(df):
     df_puns = df[df['label'] == 1]
     df_non_puns = df[df['label'] == 0]
     print(f"Original distribution: {len(df_puns)} puns, {len(df_non_puns)} non-puns")
-    df_puns_sampled = df_puns.sample(n=len(df_non_puns), random_state=42)
-    df_balanced = pd.concat([df_puns_sampled, df_non_puns]).sample(frac=1, random_state=42).reset_index(drop=True)
+    df_puns_sampled = df_puns.sample(n=len(df_non_puns), random_state=SEED_VALUE)
+    df_balanced = pd.concat([df_puns_sampled, df_non_puns]).sample(frac=1, random_state=SEED_VALUE).reset_index(drop=True)
     print(
         f"Balanced distribution: {len(df_balanced[df_balanced['label'] == 1])} puns, {len(df_balanced[df_balanced['label'] == 0])} non-puns")
     return df_balanced
@@ -170,19 +176,18 @@ def balance_dataset(df):
 
 def split_data(x, y):
     #Training 70%, Validation 15%, Test 15%
-    x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
-    x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
-                                                     stratify=y_train_val)
-
+    # x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.15, random_state=42, stratify=y)
+    # x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=15 / 85, random_state=42,
+    #                                                  stratify=y_train_val)
     # Training 60%, Validation 20%, Test 20%
-    # x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
-    # x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
-    #                                                   stratify=y_train_val)
+    x_train_val, x_test, y_train_val, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
+    x_train, x_val, y_train, y_val = train_test_split(x_train_val, y_train_val, test_size=0.25, random_state=42,
+                                                      stratify=y_train_val)
 
     return x_train, x_val, x_test, y_train, y_val, y_test
 
 
-def train_epoch(model, optimizer, train_loader, device):
+def train_epoch(model, optimizer, train_loader, device, loss_fn=None):
     model.train()
     total_training_loss = 0
     for batch in train_loader:
@@ -191,8 +196,13 @@ def train_epoch(model, optimizer, train_loader, device):
         labels = batch[2].to(device)
 
         optimizer.zero_grad()
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-        loss = outputs.loss
+        if loss_fn is not None:
+            outputs = model(input_ids, attention_mask=attention_mask)
+            loss = loss_fn(outputs.logits, labels)
+        else:
+            outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+            loss = outputs.loss
+            
         total_training_loss += loss.item()
         loss.backward()
         optimizer.step()
@@ -219,7 +229,7 @@ def evaluate(model, dataloader, device):
     return all_true_labels, all_predictions
 
 
-def cross_validation(x, y, bert_tokenizer, n_splits=5):
+def cross_validation(x, y, bert_tokenizer, n_splits=5, loss_fn=None):
     skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=SEED_VALUE)
     cv_results = []
 
@@ -250,7 +260,7 @@ def cross_validation(x, y, bert_tokenizer, n_splits=5):
 
         # Training
         for epoch in range(NUM_EPOCHS):
-            avg_train_loss = train_epoch(fold_model, fold_optimizer, fold_train_loader, DEFAULT_DEVICE)
+            avg_train_loss = train_epoch(fold_model, fold_optimizer, fold_train_loader, DEFAULT_DEVICE, loss_fn=loss_fn)
             print(f"  Fold {fold+1} | Epoch {epoch+1} | Avg Train Loss: {avg_train_loss:.4f}")
 
         # Evaluation
@@ -293,11 +303,11 @@ def cross_validation(x, y, bert_tokenizer, n_splits=5):
     print(f"\nCV Accuracy: {np.mean(cv_accuracies):.4f} ± {np.std(cv_accuracies):.4f}")
 
 
-def holdout_validation(model, optimizer, train_loader, val_loader, test_loader, num_epochs, device, report_path, class_names):
+def holdout_validation(model, optimizer, train_loader, val_loader, test_loader, num_epochs, device, report_path, class_names, loss_fn=None):
     for epoch in range(num_epochs):
         print(f"Starting Epoch {epoch + 1} of {num_epochs}")
         # TRAINING
-        avg_training_loss = train_epoch(model, optimizer, train_loader, device)
+        avg_training_loss = train_epoch(model, optimizer, train_loader, device, loss_fn=loss_fn)
 
         print(f"Average Training Loss for epoch {epoch + 1}: {avg_training_loss:.4f}")
         with open(report_path, "a") as file:
@@ -333,6 +343,13 @@ if __name__ == '__main__':
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
+    torch.use_deterministic_algorithms(True)
+
+    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
+    bert_model.to(DEFAULT_DEVICE)
+    optimizer = AdamW(bert_model.parameters(), lr=LEARNING_RATE, eps=1e-8, weight_decay = 0.01)
+
     print(f"Using Device: {DEFAULT_DEVICE}")
     print(f"Cuda is {torch.cuda.is_available()}")
     endtime = time.time()
@@ -340,18 +357,13 @@ if __name__ == '__main__':
     print(f"Time elapsed: {delta:.2f} seconds")
 
 
-    # Model and Report Saving
+    # Model and report saving
     os.makedirs(OUTPUT_DIRECTORY, exist_ok=True)
     report_path = os.path.join(OUTPUT_DIRECTORY, "classification_report.txt")
     with open(report_path, "w") as file:
         file.write("")
 
-    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    bert_model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
-    bert_model.to(DEFAULT_DEVICE)
-    optimizer = AdamW(bert_model.parameters(), lr=LEARNING_RATE, eps=1e-8, weight_decay = 0.01)
-
-    # Dataset Preparation
+    # Dataset preparation
     df = prepare_dataset(DATASET_PATH)
     if df is None:
         exit(f"No Dataset was defined under Path: {DATASET_PATH}")
@@ -361,20 +373,22 @@ if __name__ == '__main__':
 
     if BALANCE_DATASET:
         df = balance_dataset(df)
+        loss_fn = None
+    else:
+        class_counts = df['label'].value_counts().sort_index()
+        total = len(df)
+        weight_0 = total / (2.0 * class_counts[0])
+        weight_1 = total / (2.0 * class_counts[1])
+        class_weights = torch.tensor([weight_0, weight_1], dtype=torch.float32).to(DEFAULT_DEVICE)
+        loss_fn = torch.nn.CrossEntropyLoss(weight=class_weights)
 
     x = df.drop('label', axis=1)
     y = df['label']
 
     if CROSS_VALIDATION:
-        cross_validation(x, y, bert_tokenizer)
+        cross_validation(x, y, bert_tokenizer, loss_fn=loss_fn)
 
     x_train, x_val, x_test, y_train, y_val, y_test = split_data(x, y)
-
-    # Class weights for imbalanced data
-    # class_counts = df['label'].value_counts()
-    # total = len(df)
-    # class_weights = torch.tensor([total / (2 * class_counts[0]), total / (2 * class_counts[1])]).to(DEFAULT_DEVICE)
-    # loss_function = torch.nn.CrossEntropyLoss(weight=class_weights)
 
     with open(report_path, "a") as file:
         file.write("=" * 70 + "\n")
@@ -402,7 +416,8 @@ if __name__ == '__main__':
         num_epochs=NUM_EPOCHS,
         device=DEFAULT_DEVICE,
         report_path=report_path,
-        class_names=CLASSIFICATION_NAMES
+        class_names=CLASSIFICATION_NAMES,
+        loss_fn=loss_fn
     )
 
     bert_model.save_pretrained(OUTPUT_DIRECTORY)
