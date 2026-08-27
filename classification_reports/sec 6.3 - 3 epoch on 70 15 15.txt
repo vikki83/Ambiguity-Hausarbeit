@@ -1,21 +1,21 @@
 ======================================================================
 HOLD-OUT EVALUATION
-NUM_EPOCHS: 3, BATCH_SIZE: 16, TRAINING_SIZE: 771, VAL_SIZE: 257, TEST_SIZE: 258,LEARNING_RATE: 1e-05
+NUM_EPOCHS: 3, BATCH_SIZE: 16, TRAINING_SIZE: 900, VAL_SIZE: 193, TEST_SIZE: 193,LEARNING_RATE: 1e-05
 ======================================================================
 
-Average Training Loss for epoch 1: 0.5548
+Average Training Loss for epoch 1: 0.5207
 ---------------------------------------------
-Validation Accuracy: 0.8755
+Validation Accuracy: 0.8964
 
 ---------------------------------------------
-Average Training Loss for epoch 2: 0.2989
+Average Training Loss for epoch 2: 0.2484
 ---------------------------------------------
-Validation Accuracy: 0.9027
+Validation Accuracy: 0.9171
 
 ---------------------------------------------
-Average Training Loss for epoch 3: 0.1906
+Average Training Loss for epoch 3: 0.1304
 ---------------------------------------------
-Validation Accuracy: 0.9144
+Validation Accuracy: 0.9067
 
 ---------------------------------------------
 =============================================
@@ -23,38 +23,38 @@ Dev Set Classification Report
 
               precision    recall  f1-score   support
 
-     Non-Pun       0.91      0.92      0.92       129
-         Pun       0.92      0.91      0.91       128
+     Non-Pun       0.92      0.89      0.90        96
+         Pun       0.89      0.93      0.91        97
 
-    accuracy                           0.91       257
-   macro avg       0.91      0.91      0.91       257
-weighted avg       0.91      0.91      0.91       257
+    accuracy                           0.91       193
+   macro avg       0.91      0.91      0.91       193
+weighted avg       0.91      0.91      0.91       193
 =============================================
 Tuning run: test set not evaluated (set FINAL_TEST_RUN = True for the final run).
 
 
 ===========================================================================
 Custom Testing Summary
-Puns: (45/50 correct)
-Non-Puns: (24/50 correct)
+Puns: (49/50 correct)
+Non-Puns: (22/50 correct)
 =============================================
 Performance of the model with new sentences
               precision    recall  f1-score   support
 
-     Non-Pun       0.83      0.48      0.61        50
-         Pun       0.63      0.90      0.74        50
+     Non-Pun       0.96      0.44      0.60        50
+         Pun       0.64      0.98      0.77        50
 
-    accuracy                           0.69       100
-   macro avg       0.73      0.69      0.68       100
-weighted avg       0.73      0.69      0.68       100
+    accuracy                           0.71       100
+   macro avg       0.80      0.71      0.69       100
+weighted avg       0.80      0.71      0.69       100
 =============================================
 
-Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why don't scientists trust atoms? Because they make up everything. - Prediction: Pun - Correct: Pun
 Sentence: Why did the scarecrow win an award? Because he was outstanding in his field. - Prediction: Pun - Correct: Pun
 Sentence: I used to be a baker, but I couldn't make enough dough. - Prediction: Pun - Correct: Pun
 Sentence: I don't trust stairs. They're always up to something. - Prediction: Pun - Correct: Pun
 Sentence: Did you hear about the restaurant on the moon? Great food, no atmosphere. - Prediction: Pun - Correct: Pun
-Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Non-Pun - Correct: Pun
+Sentence: Why are skeletons so calm? Because nothing gets under their skin. - Prediction: Pun - Correct: Pun
 Sentence: What's the best thing about Switzerland? I don't know, but the flag is a big plus. - Prediction: Pun - Correct: Pun
 Sentence: I stayed up all night to see where the sun went. Then it dawned on me. - Prediction: Pun - Correct: Pun
 Sentence: The lumberjack loved his new computer. He especially liked logging in. - Prediction: Pun - Correct: Pun
@@ -67,7 +67,7 @@ Sentence: I'm reading a horror story in Braille. Something bad is about to happe
 Sentence: A bee's hair is always sticky because it uses a honeycomb. - Prediction: Pun - Correct: Pun
 Sentence: What do you call a pig that does karate? A pork chop. - Prediction: Pun - Correct: Pun
 Sentence: Why are fish so smart? Because they live in schools. - Prediction: Pun - Correct: Pun
-Sentence: My sea sickness comes in waves. - Prediction: Non-Pun - Correct: Pun
+Sentence: My sea sickness comes in waves. - Prediction: Pun - Correct: Pun
 Sentence: I'm glad I know sign language, it's pretty handy. - Prediction: Pun - Correct: Pun
 Sentence: I'm terrified of clocks. They're very alarming. - Prediction: Pun - Correct: Pun
 Sentence: I told my computer I needed a break, and it said, 'No problem, I'm already in bits.' - Prediction: Pun - Correct: Pun
@@ -75,7 +75,7 @@ Sentence: A midget psychic escaped from prison. He was a small medium at large. 
 Sentence: Why did the coffee file a police report? It got mugged. - Prediction: Pun - Correct: Pun
 Sentence: I asked the AI for a joke, and it responded so promptly. - Prediction: Pun - Correct: Pun
 Sentence: That must be a loud musician. He's got a lot of amps. - Prediction: Pun - Correct: Pun
-Sentence: The calendar maker's days are numbered. - Prediction: Non-Pun - Correct: Pun
+Sentence: The calendar maker's days are numbered. - Prediction: Pun - Correct: Pun
 Sentence: Why did the biologist break up with the physicist? They had no chemistry. - Prediction: Pun - Correct: Pun
 Sentence: I asked a sign painter for a good pun. He gave me a sign. - Prediction: Pun - Correct: Pun
 Sentence: The life of a lighthouse keeper is very isolated, but they're always in the spotlight. - Prediction: Pun - Correct: Pun
@@ -124,7 +124,7 @@ Sentence: You have to bite the bullet. - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: He hit the nail on the head. - Prediction: Pun - Correct: Non-Pun
 Sentence: That's the best of both worlds. - Prediction: Non-Pun - Correct: Non-Pun
 Sentence: Don't cry over spilled milk. - Prediction: Non-Pun - Correct: Non-Pun
-Sentence: The presentation will begin in ten minutes. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The presentation will begin in ten minutes. - Prediction: Pun - Correct: Non-Pun
 Sentence: Many people commute to the city for work. - Prediction: Pun - Correct: Non-Pun
 Sentence: The museum's new exhibit features modern art. - Prediction: Pun - Correct: Non-Pun
 Sentence: He is studying to become a mechanical engineer. - Prediction: Pun - Correct: Non-Pun
@@ -134,7 +134,7 @@ Sentence: The new policy will take effect on the first of the month. - Predictio
 Sentence: I am going to the gym. - Prediction: Pun - Correct: Non-Pun
 Sentence: The company reported its quarterly earnings today. - Prediction: Pun - Correct: Non-Pun
 Sentence: She is painting the walls of her living room. - Prediction: Pun - Correct: Non-Pun
-Sentence: The store will close at 9:00 PM tonight. - Prediction: Non-Pun - Correct: Non-Pun
+Sentence: The store will close at 9:00 PM tonight. - Prediction: Pun - Correct: Non-Pun
 Sentence: I need to get my car's oil changed soon. - Prediction: Pun - Correct: Non-Pun
 Sentence: The national park is home to many different species of wildlife. - Prediction: Pun - Correct: Non-Pun
 Sentence: He is allergic to peanuts. - Prediction: Pun - Correct: Non-Pun
