@@ -31,6 +31,7 @@ ADD_SIMPLE_NON_PUNS = True   # True = add simple non-puns to SemEval dataset    
 BALANCE_DATASET = True       # True = use equal amount of puns and non puns     | False = use the imbalanced dataset
 CROSS_VALIDATION = False      # True = run Cross Validation                      | False = do not run Cross Validation
 CUSTOM_TESTING = True        # True = run Custom Testing                        | False = do not run Custom Testing
+FINAL_TEST_RUN = False        # True = evaluate the held-out test set ONCE (only for the final run) | False = dev set only
 
 
 def create_dataloader_from_data(x_data, y_data, tokenizer, maxlen, batch_size, shuffle=False):
@@ -303,7 +304,7 @@ def cross_validation(x, y, bert_tokenizer, n_splits=5, loss_fn=None):
     print(f"\nCV Accuracy: {np.mean(cv_accuracies):.4f} ± {np.std(cv_accuracies):.4f}")
 
 
-def holdout_validation(model, optimizer, train_loader, val_loader, test_loader, num_epochs, device, report_path, class_names, loss_fn=None):
+def holdout_validation(model, optimizer, train_loader, val_loader, test_loader, num_epochs, device, report_path, class_names, loss_fn=None, final_test_run=False):
     for epoch in range(num_epochs):
         print(f"Starting Epoch {epoch + 1} of {num_epochs}")
         # TRAINING
@@ -323,14 +324,27 @@ def holdout_validation(model, optimizer, train_loader, val_loader, test_loader, 
             file.write(f"Validation Accuracy: {avg_val_accuracy:.4f}\n")
             file.write("\n" + "-" * 45 + "\n")
 
-    # TESTING
-    all_true_labels, all_predictions = evaluate(model, test_loader, device)
-
+    # DEV SET CLASSIFICATION REPORT
+    # Full per-class metrics on the dev set (from the last epoch's evaluation)
     with open(report_path, "a") as file:
         file.write("=" * 45 + "\n")
-        file.write("Validation for the new model\n\n")
-        file.write(classification_report(all_true_labels, all_predictions, target_names=class_names))
+        file.write("Dev Set Classification Report\n\n")
+        file.write(classification_report(val_labels, val_preds, target_names=class_names))
         file.write("=" * 45 + "\n")
+
+    # TESTING
+    # The held-out test set is evaluated only once at the very end
+    if final_test_run:
+        all_true_labels, all_predictions = evaluate(model, test_loader, device)
+
+        with open(report_path, "a") as file:
+            file.write("=" * 45 + "\n")
+            file.write("Test Set Evaluation (final run)\n\n")
+            file.write(classification_report(all_true_labels, all_predictions, target_names=class_names))
+            file.write("=" * 45 + "\n")
+    else:
+        with open(report_path, "a") as file:
+            file.write("Tuning run: test set not evaluated (set FINAL_TEST_RUN = True for the final run).\n")
 
 
 if __name__ == '__main__':
@@ -417,7 +431,8 @@ if __name__ == '__main__':
         device=DEFAULT_DEVICE,
         report_path=report_path,
         class_names=CLASSIFICATION_NAMES,
-        loss_fn=loss_fn
+        loss_fn=loss_fn,
+        final_test_run=FINAL_TEST_RUN
     )
 
     bert_model.save_pretrained(OUTPUT_DIRECTORY)
