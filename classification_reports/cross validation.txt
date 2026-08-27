@@ -1,0 +1,90 @@
+======================================================================
+CROSS VALIDATION (5-Fold)
+NUM_EPOCHS: 2, BATCH_SIZE: 16, LEARNING_RATE: 1e-05
+======================================================================
+
+--- Fold 1/5 ---
+              precision    recall  f1-score   support
+
+     Non-Pun       0.95      0.91      0.93       257
+         Pun       0.91      0.95      0.93       258
+
+    accuracy                           0.93       515
+   macro avg       0.93      0.93      0.93       515
+weighted avg       0.93      0.93      0.93       515
+
+--- Fold 2/5 ---
+              precision    recall  f1-score   support
+
+     Non-Pun       0.88      0.98      0.93       258
+         Pun       0.98      0.86      0.92       257
+
+    accuracy                           0.92       515
+   macro avg       0.93      0.92      0.92       515
+weighted avg       0.93      0.92      0.92       515
+
+--- Fold 3/5 ---
+              precision    recall  f1-score   support
+
+     Non-Pun       0.93      0.91      0.92       257
+         Pun       0.91      0.93      0.92       257
+
+    accuracy                           0.92       514
+   macro avg       0.92      0.92      0.92       514
+weighted avg       0.92      0.92      0.92       514
+
+--- Fold 4/5 ---
+              precision    recall  f1-score   support
+
+     Non-Pun       0.94      0.95      0.94       257
+         Pun       0.95      0.94      0.94       257
+
+    accuracy                           0.94       514
+   macro avg       0.94      0.94      0.94       514
+weighted avg       0.94      0.94      0.94       514
+
+--- Fold 5/5 ---
+              precision    recall  f1-score   support
+
+     Non-Pun       0.95      0.89      0.92       257
+         Pun       0.89      0.96      0.92       257
+
+    accuracy                           0.92       514
+   macro avg       0.92      0.92      0.92       514
+weighted avg       0.92      0.92      0.92       514
+
+======================================================================
+CROSS VALIDATION SUMMARY
+Accuracy:       0.9273 ± 0.0094
+F1 (Pun):       0.9272 ± 0.0102
+F1 (Non-Pun):   0.9272 ± 0.0094
+======================================================================
+
+======================================================================
+HOLD-OUT EVALUATION
+NUM_EPOCHS: 2, BATCH_SIZE: 16, TRAINING_SIZE: 1800, VAL_SIZE: 386, TEST_SIZE: 386,LEARNING_RATE: 1e-05
+======================================================================
+
+Average Training Loss for epoch 1: 0.4484
+---------------------------------------------
+Validation Accuracy: 0.8782
+
+---------------------------------------------
+Average Training Loss for epoch 2: 0.1819
+---------------------------------------------
+Validation Accuracy: 0.9352
+
+---------------------------------------------
+=============================================
+Dev Set Classification Report
+
+              precision    recall  f1-score   support
+
+     Non-Pun       0.91      0.97      0.94       193
+         Pun       0.97      0.90      0.93       193
+
+    accuracy                           0.94       386
+   macro avg       0.94      0.94      0.94       386
+weighted avg       0.94      0.94      0.94       386
+=============================================
+Tuning run: test set not evaluated (set FINAL_TEST_RUN = True for the final run).
