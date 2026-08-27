@@ -155,7 +155,7 @@ The \texttt{.xml} file contains 1298 sentences with puns, where the punning word
 The \texttt{.gold} file with these annotations indicates the correct senses.
 
 \vspace{4pt}
-For this paper, only \textbf{Subtask 1: Pun Detection} was used, split into 3 subsets, namely: a training set, a validation set and a test set. 
+For this paper, only \textbf{Subtask 1: Pun Detection} was used, split into 3 subsets, namely: a training set, a development set (also called validation set) and a test set \citep{jurafsky2025slp}. The development set was used repeatedly during fine-tuning to monitor the model's accuracy after each epoch, while the test set was held out completely and only used for the final evaluation of a trained model.
 It is important to mention what kind of sentences represent the non-pun class in this dataset. Non-Puns from SemEval are mostly proverbs, idioms, or other forms of figurative speech that are often used to create humorous effect:
 
 \begin{enumerate}
@@ -188,7 +188,7 @@ Each \texttt{\textless text\textgreater} has an ID with the corresponding IDs fo
 To parse the raw \texttt{.xml} file, Python's built-in \texttt{xml.etree.ElementTree} library was used. Every individual word node of the same \texttt{\textless text\textgreater} was collected and joined together into the full sentence. The parsed sentences were merged afterwards with their labels from the \texttt{.gold} file based on the ID.
 
 
-With 1607 pun- and 643 non-pun sentences, the dataset \texttt{Subtask 1: Pun Detection} is imbalanced. To avoid the bias of predicting the majority class, we used \texttt{class weights} for imbalanced data and to maintain the distribution of puns and non-puns across all splits, we added \texttt{stratified sampling}. Finally, we split the imbalanced dataset into 70\% for training, 15\% for validation and 15\% for testing.  
+With 1607 pun- and 643 non-pun sentences, the dataset \texttt{Subtask 1: Pun Detection} is imbalanced. To avoid the bias of predicting the majority class, we used \texttt{class weights} for imbalanced data and to maintain the distribution of puns and non-puns across all splits, we added \texttt{stratified sampling}. Finally, we split the imbalanced dataset into 70\% for training, 15\% for development (validation) and 15\% for testing.
 
 \section{Fine-Tuning Preparation}
 \subsection{Classifier}
@@ -263,19 +263,19 @@ The model performed well from the first runs. With some hyperparameters adjusted
 \hline
 & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Supp.} \\ 
 \hline
-Non-Pun      & 0.93 & 0.82 & 0.87 & 97  \\
-Pun          & 0.93 & 0.98 & 0.95 & 241 \\ 
+Non-Pun      & 0.91 & 0.89 & 0.90 & 97  \\
+Pun          & 0.95 & 0.97 & 0.96 & 241 \\
 \hline
-Accuracy     &      &      & \textbf{0.93} & 338 \\
-Macro Avg    & 0.93 & 0.90 & 0.91 & 338 \\
-Wtd. Avg     & 0.93 & 0.93 & 0.93 & 338 \\ 
+Accuracy     &      &      & \textbf{0.94} & 338 \\
+Macro Avg    & 0.93 & 0.93 & 0.93 & 338 \\
+Wtd. Avg     & 0.94 & 0.94 & 0.94 & 338 \\
 \hline
 \end{tabular}
-\caption{Classification Report 1 (2 epochs)}
+\caption{Classification Report 1 (2 epochs), evaluated on the development set (15\% of the imbalanced dataset, 338 sentences)}
 \label{tab:classification_report}
 \end{table}
 
-The results in Table 3 demonstrate high accuracy. Precision of predicting both puns and non-puns is correct 93\% of the time.  Recall differs between both classes for about 15\%, favoring puns. Since the original SemEval dataset is imbalanced and has much more pun sentences, the model could have learnt that to choose a pun is always a correct guess, and thus, it became biased.
+The results in Table 3 demonstrate high accuracy on the development set. Precision is high for both classes (0.91 for non-puns and 0.95 for puns). Recall, however, differs between both classes by about 8 percentage points, favoring puns (0.97 vs 0.89). Since the original SemEval dataset is imbalanced and has much more pun sentences, the model could have learnt that to choose a pun is always a correct guess, and thus, it became biased.
 To achieve better recall scores for non-puns, the number of examples from the majority class was reduced to match the number of the non-puns. 
 
 
@@ -290,40 +290,40 @@ Several runs were conducted using different hyperparameters to determine the bes
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{l|ccc}
 \hline
-\multicolumn{4}{c}{\textbf{Report 6}} \\
+\multicolumn{4}{c}{\textbf{Report 6 (70/15/15, 2 epochs)}} \\
 \hline
-& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\
 \hline
-Non-Pun  & 0.92 & 0.86 & 0.89 \\
-Pun      & 0.86 & 0.93 & 0.89 \\ 
+Non-Pun  & 0.92 & 0.92 & 0.92 \\
+Pun      & 0.92 & 0.92 & 0.92 \\
 \hline
 Support  & \multicolumn{3}{c}{193} \\
-Accuracy & \multicolumn{3}{c}{\textbf{0.89}} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.92}} \\
 \hline
 \multicolumn{4}{c}{} \\ % Empty row for visual spacing
 \hline
-\multicolumn{4}{c}{\textbf{Report 8}} \\
+\multicolumn{4}{c}{\textbf{Report 8 (60/20/20, 3 epochs)}} \\
 \hline
-& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\
 \hline
-Non-Pun  & 0.89 & 0.91 & 0.90 \\
-Pun      & 0.90 & 0.88 & 0.89 \\ 
+Non-Pun  & 0.91 & 0.92 & 0.92 \\
+Pun      & 0.92 & 0.91 & 0.91 \\
 \hline
-Support  & \multicolumn{3}{c}{258} \\
-Accuracy & \multicolumn{3}{c}{\textbf{0.90}} \\
+Support  & \multicolumn{3}{c}{257} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.91}} \\
 \hline
 \end{tabular}
-\caption{Comparison of model performance with different data splits}
+\caption{Comparison of model performance with different data splits, each shown at its best-performing number of epochs, evaluated on the respective development set (15\% resp. 20\% of the balanced dataset)}
 \label{tab:model_comparison}
 \end{table}
 
-Report 6 used a 70/15/15 data split, while Report 8 a 60/20/20 split. With the same number of batch size (16) and different number of epochs (3 for Report 6 and 2 for Report 8), both models achieved similar overall accuracy (89\% and 90\%). However, their performance differs a bit. Recall for Report 6 indicates that 93\% of puns were detected correctly, while for the non-puns this score is 7\% lower, indicating again a slight bias toward predicting puns. In contrast, Report 8 appears to be more balanced, with recall scores for Puns and Non-Puns remaining closer together (88\% and 91\% respectively). 
+Report 6 used a 70/15/15 data split, while Report 8 a 60/20/20 split; both models were trained with batch size 16, and each is shown at its best-performing number of epochs as determined on the development set (2 epochs for Report 6, 3 epochs for Report 8). Report 6 achieved a slightly higher overall development set accuracy (92\% vs 91\%), with perfectly balanced precision and recall for both classes (0.92 each); Report 8 is similarly balanced (0.91--0.92 for both classes).
 
 
-As for the validation accuracy, there were some differences as well. In Report 6 it started at 0.9016 and did not change neither for epoch 2 nor for epoch 3, which suggests that the model reached it potential quickly. It was different with Report 8, its validation accuracy increased from 0.8638 to 0.9066, indicating better learning. We also trained the model for a 60/20/20 split with 3 epochs (see classification report 7 on GitHub). Though there was an increase in validation accuracy (from 0.9066 to 0.9144), the model's performance did not change at all, depicting the same metrics as in Report 7. 
+The number of epochs was also chosen using the development set. When the 70/15/15 model was trained for a third epoch, its development set accuracy rose from 0.8964 to 0.9171 after epoch 2, but dropped to 0.9067 after epoch 3, indicating the onset of overfitting. For Report 8, in contrast, a third epoch kept improving the accuracy (0.8755, 0.9027 and 0.9144), suggesting that the smaller training set requires more epochs; nevertheless, it remained below the epoch-2 peak of Report 6.
 
 
-Thus, Report 8 indicates that despite the smaller training set, the 60/20/20 split with 2 epochs was a better option for this particular dataset. Its overall accuracy is slightly lower, as in Table 3 (90\% vs 93\%), but it shows nearly identical precision and recall scores for both classes.
+Thus, based on the development set alone, the 70/15/15 split trained for 2 epochs (Report 6) was selected as the final configuration: it reaches the highest development set accuracy (0.9171) while also providing the most training data. Following \citet{jurafsky2025slp}, the held-out test set was not consulted for this comparison; it is evaluated only once, on the final model, in Section 8.
 
  
 \section{Diagnostic Evaluation}
@@ -349,37 +349,37 @@ The diagnostic test was conducted on the same models from Table 4.
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{l|ccc}
 \hline
-\multicolumn{4}{c}{\textbf{Report 6}} \\
+\multicolumn{4}{c}{\textbf{Report 6 (70/15/15, 2 epochs)}} \\
 \hline
-& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\
 \hline
-Non-Pun  & 0.80 & 0.16 & 0.27 \\
-Pun      & 0.53 & 0.96 & 0.69 \\ 
+Non-Pun  & 0.92 & 0.44 & 0.59 \\
+Pun      & 0.63 & 0.96 & 0.76 \\
 \hline
 Support  & \multicolumn{3}{c}{100} \\
-Accuracy & \multicolumn{3}{c}{\textbf{0.56}} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.70}} \\
 \hline
 \multicolumn{4}{c}{} \\ % Spacing row
 \hline
-\multicolumn{4}{c}{\textbf{Report 8}} \\
+\multicolumn{4}{c}{\textbf{Report 8 (60/20/20, 3 epochs)}} \\
 \hline
-& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\ 
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} \\
 \hline
-Non-Pun  & 0.42 & 0.10 & 0.16 \\
-Pun      & 0.49 & 0.86 & 0.62 \\ 
+Non-Pun  & 0.83 & 0.48 & 0.61 \\
+Pun      & 0.63 & 0.90 & 0.74 \\
 \hline
 Support  & \multicolumn{3}{c}{100} \\
-Accuracy & \multicolumn{3}{c}{\textbf{0.48}} \\
+Accuracy & \multicolumn{3}{c}{\textbf{0.69}} \\
 \hline
 \end{tabular}
-\caption{Diagnostic Evaluation using a control set}
+\caption{Diagnostic Evaluation on the external control set (100 newly written sentences, not part of any SemEval split)}
 \label{tab:diagnostic_eval}
 \end{table}
 
-The result for the new set was not as expected (Table 5): accuracy sank to 48-56\%, depending on the hyperparameters used. Though both models managed to detect most of the puns, they missed more than half of the opposite class, labeling most of the non-puns as puns. 
+The result for the new set was not as expected (Table 5): accuracy sank to 69-70\%, depending on the hyperparameters used. Though both models managed to detect most of the puns (recall 0.96 and 0.90), they missed more than half of the opposite class, labeling most of the non-puns as puns.
 
 
-Report 6 was trained on more data than Report 8 (900 samples vs 771 samples, respectively), which led to a higher accuracy of the first one. However, it does not indicate that Report 6 performs better. Both models failed at predicting puns (recall 16\% and 10\%).
+Report 6 was trained on more data than Report 8 (900 samples vs 771 samples, respectively), which led to a slightly higher accuracy of the first one. However, it does not indicate that Report 6 performs better. Both models failed equally at recognizing the new non-puns (recall 0.44 and 0.48).
 
 
 It appears that BERT did not actually learn what puns are, instead, it learnt what belongs to class “0”, namely proverb-like or idiom-like structure and if the sentence did not match the structure, it automatically was labeled as “1”. That is why the new non-pun sentences fell to the category of puns. So it means that Table 3 and Table 4 show high accuracy not because the classifier was actually able to \textit{detect} puns or ambiguity, it was taught to recognize proverbs and idioms instead. 
@@ -390,7 +390,7 @@ As a solution, we increased the size of the SemEval Dataset by adding 643 non-pu
 \subsection{Updating SemEval Dataset}
 % 70/15/15 - 3 epochs overfitted
 % 70/15/15 -  2 epochs accuracy 95%, custom testing 89%
-As seen in Table 6, updating the dataset has resulted in a high model's performance, with non-pun recall rising from 2\% to 92\%. The overall accuracy increased to 89\% in comparison to Table 5. 
+As seen in Table 6, updating the dataset has resulted in a high model's performance, with non-pun recall on the control set rising from 0.44 to 0.90. The overall accuracy increased to 90\% in comparison to Table 5.
 
 \begin{table}[h]
 \centering
@@ -400,15 +400,15 @@ As seen in Table 6, updating the dataset has resulted in a high model's performa
 \hline
 & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Supp.} \\ 
 \hline
-Non-Pun      & 0.87 & 0.92 & 0.89 & 50  \\
-Pun          & 0.91 & 0.86 & 0.89 & 50  \\ 
+Non-Pun      & 0.90 & 0.90 & 0.90 & 50  \\
+Pun          & 0.90 & 0.90 & 0.90 & 50  \\
 \hline
-Accuracy     &      &      & \textbf{0.89} & 100 \\
-Macro Avg    & 0.89 & 0.89 & 0.89 & 100 \\
-Wtd. Avg     & 0.89 & 0.89 & 0.89 & 100 \\ 
+Accuracy     &      &      & \textbf{0.90} & 100 \\
+Macro Avg    & 0.90 & 0.90 & 0.90 & 100 \\
+Wtd. Avg     & 0.90 & 0.90 & 0.90 & 100 \\
 \hline
 \end{tabular}
-\caption{Control test with updated SemEval dataset.}
+\caption{Evaluation on the same external control set (100 sentences), after retraining on the updated SemEval dataset.}
 \label{tab:updated_control_test}
 \end{table}
 
@@ -417,35 +417,38 @@ Some of the misclassified non-puns:
 \begin{enumerate}
     \item[(6)] ``The \textit{government} announced new environmental regulations."
     \item[(7)] ``He is allergic to \textit{peanuts}."
-    \item[(8)] ``Many people \textit{commute} to the city for work."
+    \item[(8)] ``He is \textit{studying} to become a mechanical engineer."
 \end{enumerate}
 
-The words in italics from (6-8) are not used ambiguously, but can be often found in pun sentences. For example, sentences with the same words found in the SemEval dataset (hom\_1913, hom\_820 and hom\_1955) are puns, which explains why sentences (6-8) were misclassified. It also demonstartes that BERT memorized the vocabulary of the training set and what category they belonged to. Thus, when receiving a new sentence containig a word from the training set, BERT makes its prediction based on what it learned before.
+The words in italics from (6-8) are not used ambiguously, but can be often found in pun sentences. For example, sentences with the same words found in the SemEval dataset (hom\_1913, hom\_820 and hom\_296) are puns, which explains why sentences (6-8) were misclassified. It also demonstartes that BERT memorized the vocabulary of the training set and what category they belonged to. Thus, when receiving a new sentence containig a word from the training set, BERT makes its prediction based on what it learned before.
 
 \vspace{4pt}
 Some of the misclassified puns:
 
 \begin{enumerate}
-    \item[(9)] ``Why don't scientists trust atoms? Because they \textit{make up} everything."
-    \item[(10)] ``Why are skeletons so calm? Because nothing \textit{gets under their skin}." 
-    \item[(11)] ``I'm glad I know sign language, it's pretty \textit{handy}."
+    \item[(9)] ``My sea sickness \textit{comes in waves}."
+    \item[(10)] ``The calendar maker's \textit{days are numbered}."
+    \item[(11)] ``The duck told the waiter to put the drink on his \textit{bill}."
 \end{enumerate}
 
-Some of the puns from the SemEval dataset have a question-answer structure as in (9) and (10) but they were classified wrong by BERT. This means that the model classified them as a pun not because of the pattern recognition, but because it looked for the previously seen vocabulary and failed to find the same words in the training set. Additionally, (10) contains an idiom, that is why it could be also misclassified as a non-pun.                                                                                                                
+The misclassified puns (9-11) are short declarative sentences whose punning word is embedded in an idiomatic expression (\textit{comes in waves}, \textit{days are numbered}). Such phrasing closely resembles the figurative non-pun class of the original SemEval dataset (proverbs and idioms), which explains why the model assigned them to class ``0''. This again suggests that the model relies on surface structure and previously seen vocabulary rather than on recognizing the double meaning itself.
 
-%%%%Due to BERT's ability to understand context bidirectionally, it is exeptionally good at recognizing ambiguous words. When a word refers to multiple contexts within one sentence, BERT merges them in one vector. It can be assumed that %%%%%%%
+The SemEval dataset also includes puns containing two declarative sentences (a setup and a punchline). To see if the model developed any bias towards this specific sentence structure, we used two sentenced from the diagnostic test (that were previously classified correctly) and added a second part to each of them. The model misclassified the updated sentences:
+
+\begin{enumerate}
+    \item[(12)] ``She is training for a marathon. Her parents would like to see her run. '' 
+    \item[(13)] ``He is taking a course on statistics and data analysis. I took it a year ago but failed it.''
+\end{enumerate}
 
 
 \section{Validation Methods}
 There are two main ways to test the model, namely hold-out validation and cross-validation. 
 
 \subsection{Hold-out vs. Cross-validation}
-The results above were achieved using hold-out validation. In this method, the data is split into three fixed sets, so BERT never sees the testing or validation data during its training phase and evaluates on one fixed test set only.
+The results above were achieved using hold-out validation. In this method, the data is split into three fixed sets, so BERT never sees the development or test data during its training phase and evaluates on one fixed test set only.
 
 Cross validation, on the other hand, repeats this process several times. It trains separate models on different splits (e.g. 5 models and 5 splits) to make sure that every single sentence will eventually end up in a test set. After all the splits are done, it provides a final average score with the standard deviation. Cross validation shows a more reliable accuracy because it is based on several different versions of the data \citep{geeks_cross_val}.
 
-
-\subsection{Cross Validation}
 
 \begin{table}[h]
 \small % Sets font to 10pt per ACL guidelines
@@ -455,24 +458,46 @@ Cross validation, on the other hand, repeats this process several times. It trai
 \begin{tabular}{lc}
 \hline
 \textbf{Metric} & \textbf{Score (Mean $\pm$ SD)} \\ \hline
-Accuracy        & $0.9331 \pm 0.0144$           \\
-F1 (Pun)        & $0.9325 \pm 0.0164$           \\
-F1 (Non-Pun)    & $0.9336 \pm 0.0128$           \\ \hline
+Accuracy        & $0.9273 \pm 0.0094$           \\
+F1 (Pun)        & $0.9272 \pm 0.0102$           \\
+F1 (Non-Pun)    & $0.9272 \pm 0.0094$           \\ \hline
 \end{tabular}
-\caption{ Cross-Validation Performance (5-Folds)}
+\caption{Cross-Validation Performance, averaged over the five held-out folds of the updated dataset (5-Folds)}
 \end{table}
 
+\begin{table}[h]
+\centering
+\small % Sets font to 10pt per ACL guidelines
+\setlength{\tabcolsep}{4pt} % Squeezes column width
+\begin{tabular}{l|cccc}
+\hline
+& \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Supp.} \\ 
+\hline
+Non-Pun      & 0.91 & 0.99 & 0.95 & 193 \\
+Pun          & 0.99 & 0.91 & 0.95 & 193  \\
+\hline
+Accuracy     &      &      & \textbf{0.95} & 386 \\
+Macro Avg    & 0.95 & 0.95 & 0.95 & 386 \\
+Wtd. Avg     & 0.95 & 0.95 & 0.95 & 386 \\
+\hline
+\end{tabular}
+\caption{Hold-out evaluation on the held-out test set (15\% of the updated dataset, 386 sentences)}
+\label{tab:holdout_final}
+\end{table}
 
+While the single hold-out test evaluation achieved 95\% accuracy, cross validation demonstrated a slightly lower accuracy of 93\%. The standard deviation of $\pm 0.94\%$ across the folds suggests that the model's performance is highly stable and not dependent on a specific data split.
 
  
 
 \section{Conclusion}
-BERT is a powerfull language model that can perform different tasks when used with a classifier. The aim of this paper was to detect ambiguity in humor by training BERT to recognize puns. The fine-tuned model demonstrated high accuracy of 90\%-95\% but failed the diagnostic test by favoring puns. Updating the SemEval dataset to 1.800 training samples has resulted in a much better performance (92\% recall instead of 2\%) and a balanced F-1 score for both classes (89\%). 
+BERT is a powerfull language model that can perform different tasks when used with a classifier. The aim of this paper was to detect ambiguity in humor by training BERT to recognize puns. The fine-tuned model demonstrated high accuracy of 90\%-94\% on the development sets but failed the diagnostic test by favoring puns. Updating the SemEval dataset to 1.800 training samples has resulted in a much better performance on the control set (non-pun recall of 0.90 instead of 0.44) and a balanced F-1 score for both classes (0.90), with a final test set accuracy of 95\%.
 
-However, despite the model's accuracy of 89\%, it would be wrong to say that BERT understood what puns are. Instead, it developed a lexical bias based on the words from the training set. Which proves that detectining humor still remains a significant challenge for machine learning.
+However, despite the model's accuracy of 90\% on the control set, it would be wrong to say that BERT understood what puns are. Instead, it developed a lexical bias based on the words from the training set. Which proves that detectining humor still remains a significant challenge for machine learning.
+
+To achive better results, future research should focus on adjusting the SemEval dataset for both categories. More trigger words for puns (e.g. peanuts, government) could be added for non puns sentences to make the model analize the semantic layer instead of simply memorizing the key words. As well as including more literal sentences consisting of two parts to prevent the model from misclassifying non-puns.
 
 \nocite{*}
 \bibliographystyle{acl_natbib}
-\bibliography{anthology,acl2020}
+\bibliography{anthology}
 
 \end{document}
